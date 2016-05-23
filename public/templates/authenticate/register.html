@@ -1,0 +1,60 @@
+<div class="row" ng-if="!isSuccess">
+    <div class="col-md-6 col-md-offset-3">
+        <div class="login-panel panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Register.</h3>
+            </div>
+            <div class="panel-body">
+                <form name="form" method="post" role="form" novalidate ng-submit="submitForm(form.$valid)" ng-if="isEmailSent == null || isEmailSent == false">
+                    <div class="form-group" ng-class="{ 'has-error' : form.name.$invalid && !form.username.$pristine && form.$submitted }">
+                        <label>Name:</label>
+                        <input type="text" class="form-control" placeholder="Name" name="name" ng-model="formRegister.name" ng-minlength="4" ng-maxlength="40"
+                        required />
+
+                        <div ng-messages="form.name.$error" ng-if="form.$submitted" class="error-message">
+                            <span ng-message="minlength">Name must be at least 4 characters.</span>
+                            <span ng-message="maxlength">Name must not greater than 40 characters.</span>
+                            <span ng-message="required">Name is required.</span>
+                        </div>
+                    </div>
+                    <div class="form-group" ng-class="{ 'has-error' : form.email.$invalid && !form.email.$pristine && form.$submitted }">
+                        <label>Email:</label>
+                        <input type="email" class="form-control" placeholder="Email" name="email" required ng-model="formRegister.email" ng-minlength="10"
+                        ng-maxlength="255" maxlength="255" />
+                        <div ng-messages="form.email.$error" ng-if="form.$submitted" class="error-message">
+                            <span ng-message="email">This is not an email.</span>
+                            <span ng-message="minlength">Email must be at least 10 characters.</span>
+                            <span ng-message="maxlength">This is not an email.</span>
+                            <span ng-message="required">Email is required.</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group" ng-class="{ 'has-error' : form.password.$invalid && !form.password.$pristine && form.$submitted }">
+                        <label>Mật khẩu:</label>
+                        <input type="password" class="form-control" placeholder="Password" name="password" required ng-model="formRegister.password"
+                        ng-minlength="6" ng-maxlength="40" maxlength="40" />
+                        <div ng-messages="form.password.$error" ng-if="form.$submitted" class="error-message">
+                            <span ng-message="minlength">Password must be at least 6 characters.</span>
+                            <span ng-message="maxlength">Password must be less than 40 characters.</span>
+                            <span ng-message="required">Password is required.</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group" ng-if="msg.length > 0">
+                        <div class="error-message">
+                            {{msg}}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="submit" value="Register" class="btn btn-success btn-block" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h4 ng-if="isSuccess">
+	Account register successfully, click here to login <a href="/log-in">Login</a>
+</h4>

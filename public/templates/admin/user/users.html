@@ -1,0 +1,128 @@
+<div class="row">
+    <div class="col-md-3">
+        <h3 class=" pull-left">Quản lý tài khoản.</h3>
+    </div>
+</div>
+<!--search form-->
+<div class="row">
+    <div class="col-md-7">
+        <form name="searchForm" class="form-horizontal" novalidate ng-submit="query();">
+            <div class="form-group">
+                <input class="text-box single-line" placeholder="keyword" name="keyword" ng-model="search.keyword" ng-minlength="1" ng-maxlength="255"
+                />
+                <input type="submit" value="Tìm kiếm" class="btn btn-md btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="row">
+    <table class="table table-bordered table-hover tableAdmin">
+        <tr>
+            <th>Họ Tên</th>
+            <th>Email</th>
+            <th>Quyền</th>
+            <th>Xác nhận</th>
+            <th>Kích hoạt</th>
+            <th>Ngày tạo</th>
+            <th></th>
+        </tr>
+        <tr data-id="{{user.id}}" ng-repeat="user in listItem" ng-class="{ 'active' : user.id == newEditForm.id}">
+            <td width="20%">{{user.name}}</td>
+            <td width="20%%">{{user.email}}</td>
+            <td width="10%%">{{user.role}}</td>
+            <td width="10%%">{{user.isVerified}}</td>
+            <td width="10%%">{{user.isActive}}</td>
+            <td width="15%">{{user.createdAt | date:"dd/MM/yyyy h:mma"}}</td>
+            <td width="15%" class="text-center">
+                <a ng-click="edit(user.id,form)" class="btn btn-sm btn-warning">Sửa</a>
+                <a ng-click="delete(user.id)" confirm="Bạn muốn xóa tài khoản {{user.email}}?" class="btn btn-sm btn-danger" ng-if="user.isVerified === false">Xóa</a>
+            </td>
+        </tr>
+    </table>
+    <uib-pagination total-items="totalItems" ng-model="currentPage" max-size="$root.maxPagingSize" class="pagination-sm" boundary-links="true"
+    rotate="false" num-pages="numPages" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"
+    items-per-page="$root.itemsPerPage" ng-change="query();"></uib-pagination>
+</div>
+
+<!--edit form-->
+
+<div class="row" ng-hide="newEditForm === null">
+    <div class="col-md-10 col-md-offset-1">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Sửa tài khoản.</h3>
+            </div>
+            <div class="panel-body">
+
+                <form name="form" method="post"  novalidate ng-submit="submitForm(form.$valid)">
+                    <fieldset>
+                        <div class="form-group" ng-class="{ 'has-error' : form.name.$invalid && !form.name.$pristine && form.$submitted }">
+                            <label>Tên</label>
+                            <input type="text" class="form-control" placeholder="Name" name="name" ng-model="newEditForm.name" ng-minlength="4" ng-maxlength="40"
+                            required />
+                            <div ng-messages="form.name.$error" ng-if="form.$submitted" class="error-message">
+                                <span ng-message="minlength">Tên tối thiểu 4 kí tự.</span>
+                                <span ng-message="maxlength">Tên tối đa 40 kí tự.</span>
+                                <span ng-message="required">Bạn chưa nhập tên.</span>
+                            </div>
+                        </div>
+                        <div class="form-group" ng-class="{ 'has-error' : form.email.$invalid && !form.email.$pristine && form.$submitted }">
+                            <label>Email</label>
+                            <input type="email" class="form-control" placeholder="Email" name="email" required ng-model="newEditForm.email" ng-minlength="10"
+                            ng-maxlength="255" />
+                            <div ng-messages="form.email.$error" ng-if="form.$submitted" class="error-message">
+                                <span ng-message="minlength">Email tối thiểu 10 kí tự.</span>
+                                <span ng-message="maxlength">Email tối đa 255 kí tự.</span>
+                                <span ng-message="required">Bạn chưa nhập email.</span>
+                                <span ng-message="email">Địa chỉ email không chính xác.</span>
+                            </div>
+                        </div>
+                        <div class="form-group" ng-class="{ 'has-error' : form.role.$invalid && !form.role.$pristine && form.$submitted }">
+                            <label>Quyền</label>
+                            <select class="form-control" name="role" required ng-model="newEditForm.role">
+                                <option value="">Chọn</option>
+                                <option value="normal">Normal</option>
+                                <option value="editor">Editor</option>
+                                <option value="admin">Admin</option>
+                            </select>
+                            <div ng-messages="form.role.$error" ng-if="form.$submitted" class="error-message">
+                                <span ng-message="required">Bạn chưa chọn quyền.</span>
+                            </div>
+                        </div>
+                        <div class="form-group" ng-class="{ 'has-error' : form.isActive.$invalid && !form.isActive.$pristine && form.$submitted }">
+                            <label>
+                                Kích hoạt
+                            </label>
+                            <select class="form-control" name="isActive" required ng-model="newEditForm.isActive">
+                                <option value="">Chọn</option>
+                                <option value="1">Có</option>
+                                <option value="0">Không</option>
+                            </select>
+                            <div ng-messages="form.isActive.$error" ng-if="form.$submitted" class="error-message">
+                                <span ng-message="required">Bạn chưa chọn kích hoạt hay không.</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group" ng-show="newEditForm.isActive==0">
+                            <label>Lí do</label>
+                            <input type="text" class="form-control" placeholder="Lí do" name="inActiveReason" ng-model="newEditForm.inActiveReason" />
+                        </div>
+                        <div class="form-group error-message" ng-if="err">
+                            {{msg}}
+                        </div>
+
+                        <input type="hidden" class="form-control" name="id" ng-model="newEditForm.id" />
+
+                        <div class="form-group">
+                            <input type="submit" value="Gởi" class="btn btn-primary" />
+                            <!--<input type="reset" class="btn btn-warning" />-->
+                            <input type="button" value="Đóng" class="btn btn-danger" ng-click="cancelEdit()" />
+                        </div>
+
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

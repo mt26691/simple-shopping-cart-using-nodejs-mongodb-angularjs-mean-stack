@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html ng-app="SimpleBlogApp">
+<html>
+
+<head>
+    <title>Hocdai admin</title>
+
+    <meta charset="utf-8">
+    <!-- Viewport mobile tag for sensible mobile support -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- inject:css -->
+    <link rel="stylesheet" href="/stylesheets/bootstrap.min.css">
+    <link rel="stylesheet" href="/stylesheets/style.css">
+    <link rel="stylesheet" href="/stylesheets/angular-toastr.css">
+    <link rel="stylesheet" href="/stylesheets/font-awesome.min.css">
+    <!-- endinject -->
+    <link rel="stylesheet" href="/dist/ckeditor/plugins/codesnippet/lib/highlight/styles/school_book.css">
+    <!-- Custom CSS -->
+    <link href="/dist/css/sb-admin-2.css" rel="stylesheet">
+    <base href="/">
+</head>
+
+<body ng-controller="masterController as master">
+
+    <div id="wrapper">
+        <!-- Navigation -->
+        <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/" target="_self">Simple blog by hocdai.com</a>
+            </div>
+            <!-- /.navbar-header -->
+
+            <ul class="nav navbar-top-links navbar-right">
+                <!-- /.dropdown -->
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-user fa-fw"></i> {{$root.currentUser.name}} <i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-user">
+                        <!--<li class="divider"></li>-->
+                        <li><a href="/log-out" target="_self"><i class="fa fa-sign-out fa-fw"></i> Log out</a>
+                        </li>
+                    </ul>
+                    <!-- /.dropdown-user -->
+                </li>
+                <!-- /.dropdown -->
+            </ul>
+            <!-- /.navbar-top-links -->
+
+            <div class="navbar-default sidebar" role="navigation">
+                <div class="sidebar-nav navbar-collapse">
+                    <ul class="nav" id="side-menu">
+                        <!--nav bar menu item generate by master controller-->
+                        <li ng-class="navClass(menuItem.url)" ng-repeat="menuItem in menuItems">
+
+                            <a href="{{menuItem.url}}" title="{{menuItem.title}}" ng-if="menuItem.isMultiLevel == null && $root.currentUser.accessRight >= menuItem.accessRight"
+                            ng-class="navClass(menuItem.url)">
+                                <i class="{{menuItem.iconClass}}"></i> {{menuItem.name}}
+                            </a>
+
+                            <!--multi level-->
+                            <a ng-if="menuItem.isMultiLevel" ng-class="navClass(menuItem.url)">
+                                <i class="{{menuItem.iconClass}}"></i>{{menuItem.name}}
+                                <span class="fa arrow"></span>
+                            </a>
+
+                            <ul class="nav nav-second-level" ng-if="menuItem.isMultiLevel">
+                                <li ng-repeat="subMenuItem in menuItem.subMenuItems">
+                                    <a title="{{subMenuItem.title}}" ng-class="navClass('{{menuItem.url}}{{subMenuItem.url}}')" href="{{menuItem.url}}{{subMenuItem.url}}">
+									   {{subMenuItem.name}}
+									</a>
+                                </li>
+
+                            </ul>
+                            <!--multi level-->
+                        </li>
+                        <!--end nav bar menu item generate by master controller-->
+                    </ul>
+                </div>
+                <!-- /.sidebar-collapse -->
+            </div>
+            <!-- /.navbar-static-side -->
+        </nav>
+
+        <!-- Page Content -->
+        <div id="page-wrapper">
+            <div class="container-fluid">
+                <div ng-view></div>
+            </div>
+            <!-- /.container-fluid -->
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /.container -->
+    <script src="/dist/ckeditor/ckeditor.js"></script>
+    <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+    <!-- inject:js -->
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/angular/angular.min.js"></script>
+    <script src="/js/angular/angular-route.min.js"></script>
+    <script src="/js/angular/angular-resource.min.js"></script>
+    <script src="/js/angular/ui-bootstrap-tpls-0.14.3.min.js"></script>
+    <script src="/js/angular/angular-confirm.js"></script>
+    <script src="/js/angular/angular-cookies.min.js"></script>
+    <script src="/js/angular/angular-messages.min.js"></script>
+    <script src="/js/angular/angular-sanitize.min.js"></script>
+    <script src="/js/angular/angular-toastr.min.js"></script>
+    <script src="/js/angular/angular-toastr.tpls.min.js"></script>
+    <script src="/js/angular/ng-ck-editor.js"></script>
+    <script src="/js/angular/ng-flow-standalone.min.js"></script>
+    <script src="/js/angular/satellizer.js"></script>
+    <script src="/js/app/angularApp.js"></script>
+    <script src="/js/app/modules/apiService.js"></script>
+    <script src="/js/app/masterController.js"></script>
+    <script src="/js/app/routes.js"></script>
+    <script src="/js/app/home/angular.articleDetailsController.js"></script>
+    <script src="/js/app/home/angular.homeController.js"></script>
+    <script src="/js/app/authenticate/loginController.js"></script>
+    <script src="/js/custom.js"></script>
+    <script src="/js/app/account/angular.changePasswordController.js"></script>
+    <script src="/js/app/account/angular.changeProfileController.js"></script>
+    <script src="/js/app/account/angular.forgotPasswordController.js"></script>
+    <script src="/js/app/account/angular.getUserProfileController.js"></script>
+    <script src="/js/app/account/angular.registerController.js"></script>
+    <script src="/js/app/account/angular.resetPasswordController.js"></script>
+    <script src="/js/app/directives/nxEqual.js"></script>
+    <script src="/js/app/admin/article/angular.articleController.js"></script>
+    <script src="/js/app/admin/comment/angular.commentController.js"></script>
+    <script src="/js/app/admin/user/angular.userController.js"></script>
+    <!-- endinject -->
+
+    <!-- Metis Menu Plugin JavaScript -->
+    <script src="/dist/js/metisMenu.js"></script>
+    <!-- Custom Theme JavaScript -->
+    <script src="/dist/js/sb-admin-2.js"></script>
+</body>
+
+</html>

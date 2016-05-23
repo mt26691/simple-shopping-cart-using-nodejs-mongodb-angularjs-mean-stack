@@ -1,0 +1,21 @@
+<div ng-if="!err" class="row">
+    <div class="col-xs-12">
+        <h3>User information</h3>
+        <hr class="gray-hr" />
+        <table class="table">
+            <tbody>
+                <tr>
+                    <td>Name</td>
+                    <td>{{user.name}}</td>
+                </tr>
+                <tr>
+                    <td>Email</td>
+                    <td>{{user.email}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div ng-if="err" class="row text-center">
+    <h3>User not found.</h3>
+</div>

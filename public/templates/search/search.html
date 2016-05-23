@@ -1,0 +1,17 @@
+<div class="row search-holder" ng-repeat="lecture in lectures">
+    <div class="col-xs-4">
+        <a href="/{{lecture.subject.nameUrl}}/{{lecture.chapter.nameUrl}}/{{lecture.nameUrl}}">
+            <img src="{{lecture.subject.image.thumbnail}}" title="{{lecture.name}}" class="search-img" />
+        </a>
+    </div>
+    <div class="col-xs-8">
+        <p><a href="/{{lecture.subject.nameUrl}}">{{lecture.subject.name}}</a> | <a href="/{{lecture.subject.nameUrl}}/{{lecture.chapter.nameUrl}}">{{lecture.chapter.name}}</a></p>
+        <h3><a href="/{{lecture.subject.nameUrl}}/{{lecture.chapter.nameUrl}}/{{lecture.nameUrl}}">{{lecture.name}}</a></h2>
+        <p><i class="fa fa-calendar"></i> <span>{{lecture.createdAt | date:"dd/MM/yyyy"}}</span> <i class="fa fa-user fa-fw"></i>  <a class="author" href="/tai-khoan/{{lecture.createdBy.id}}">{{lecture.createdBy.name}}</a></p>
+    </div>
+</div>
+<div class="text-center" ng-if="lectures.length > 0">
+        <uib-pagination total-items="totalItems" ng-model="paging.currentPage" max-size="$root.maxPagingSize" class="pagination-sm" boundary-links="true"
+    rotate="false" num-pages="numPages" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"
+    items-per-page="$root.itemsPerPage" ng-change="pageChanged()"></uib-pagination>
+</div>

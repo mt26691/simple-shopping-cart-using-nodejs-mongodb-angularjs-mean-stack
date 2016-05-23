@@ -1,0 +1,79 @@
+<div class="row" ng-if="err == false">
+    <!--Blog Roll Content-->
+    <div class="col-md-8" id="MainContainer">
+        <article>
+            <h2><a href="singlepost.html">{{article.name}}</a></h2>
+
+            <div class="row">
+                <div class="group1 col-sm-6 col-md-6">
+                    <span class="fa fa-user"></span> <a href="/user/{{article.createdBy.id}}">{{article.createdBy.name}}</a>
+                </div>
+                <div class="group2 col-sm-6 col-md-6">
+                    <span class="glyphicon glyphicon-pencil"></span> <a href="singlepost.html#comments">20 Comments</a>
+                    <span class="fa fa-calendar"></span> {{article.createdAt | date:"MMMM dd, yyyy hh:mm:ss a"}}
+                </div>
+            </div>
+
+            <hr>
+            <!--Main content of post-->
+            <div class="blog-content" ng-bind-html="article.content">
+            </div>
+        </article>
+        <hr/>
+        <ul id="comments" class="comments">
+            <li class="comment" ng-repeat="currentComment in comments">
+                <div class="clearfix">
+                    <h4 class="pull-left">{{currentComment.createdBy.name}}</h4>
+                    <p class="pull-right">{{currentComment.createdAt | date:"MMMM dd, yyyy hh:mm:ss a"}}</p>
+                </div>
+                <p>
+                    <em>{{currentComment.content}}</em>
+                </p>
+            </li>
+        </ul>
+
+        <div class="well" ng-if="isAuthenticated">
+            <h4>Leave a comment</h4>
+
+            <form name="form" novalidate role="form" class="clearfix" ng-submit="submitComment();">
+
+                <div class="col-md-12 form-group">
+                    <label class="sr-only" for="email">Comment</label>
+                    <textarea class="form-control" name="comment" ng-model="comment.content" placeholder="Comment" required></textarea>
+                    <div  ng-if="form.$submitted && comment==''" class="error-message">
+                        Comment is required.
+                    </div>
+                </div>
+
+                <div class="col-md-12 form-group text-right">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+
+            </form>
+        </div>
+        <div class="well" ng-if="!isAuthenticated">
+            <h4><a href="/log-in">Sign in</a> to post comment</h4>
+        </div>
+    </div>
+    <!--Sidebar-->
+    <div class="col-md-4">
+        <!-- Subscribe to my feed widget -->
+        <div class="well text-center">
+            <p class="lead">
+                Don't want to miss updates? Please click the below button!
+            </p>
+            <button class="btn btn-primary btn-lg">Subscribe to my feed</button>
+        </div>
+        <div class="panel panel-default" ng-if="recentArticles.length >0">
+            <div class="panel-heading">
+                <h4>Latest Posts</h4>
+            </div>
+            <ul class="list-group">
+                <li class="list-group-item" ng-repeat="currentArticle in recentArticles"><a href="/{{currentArticle.nameUrl}}/{{currentArticle.name}}">{{currentArticle.name}}</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="row text-center" ng-if="err">
+        <h1>{{msg}}</h1>
+    </div>

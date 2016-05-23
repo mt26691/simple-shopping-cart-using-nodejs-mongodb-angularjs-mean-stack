@@ -1,0 +1,513 @@
+.front-body
+{
+    padding: 75px 0px 0px 0px;
+    background-color:#e9eaea
+}
+.starter-template {
+    padding: 40px 15px;
+    text-align: center;
+}
+
+.front-page-container {
+    padding-top: 40px;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.ng-error {
+    color: #a94442;
+}
+
+.error-message {
+    color: #a94442;
+}
+
+.padding-top-down-10 {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.padding-top-down-15 {
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+.padding-top-down-20 {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+input[text].single-line {
+    padding: 3px;
+    width: 170px;
+}
+
+select.single-line {
+    padding: 3px;
+    width: 170px;
+}
+
+.tableAdmin {
+    margin-bottom: 0px;
+}
+
+.thumbnail {
+    max-width: 200px;
+    max-height: 200px;
+    width: auto;
+    height: 100%;
+}
+/*facbook button http://lipis.github.io/bootstrap-social/*/
+.btn-social {
+    position: relative;
+    padding-left: 44px;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+    .btn-social > :first-child {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 32px;
+        line-height: 34px;
+        font-size: 1.6em;
+        text-align: center;
+        border-right: 1px solid rgba(0,0,0,0.2);
+    }
+
+    .btn-social.btn-lg {
+        padding-left: 61px;
+    }
+
+        .btn-social.btn-lg > :first-child {
+            line-height: 45px;
+            width: 45px;
+            font-size: 1.8em;
+        }
+
+    .btn-social.btn-sm {
+        padding-left: 38px;
+    }
+
+        .btn-social.btn-sm > :first-child {
+            line-height: 28px;
+            width: 28px;
+            font-size: 1.4em;
+        }
+
+    .btn-social.btn-xs {
+        padding-left: 30px;
+    }
+
+        .btn-social.btn-xs > :first-child {
+            line-height: 20px;
+            width: 20px;
+            font-size: 1.2em;
+        }
+
+.btn-social-icon {
+    position: relative;
+    padding-left: 44px;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    height: 34px;
+    width: 34px;
+    padding: 0;
+}
+
+    .btn-social-icon > :first-child {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 32px;
+        line-height: 34px;
+        font-size: 1.6em;
+        text-align: center;
+        border-right: 1px solid rgba(0,0,0,0.2);
+    }
+
+    .btn-social-icon.btn-lg {
+        padding-left: 61px;
+    }
+
+        .btn-social-icon.btn-lg > :first-child {
+            line-height: 45px;
+            width: 45px;
+            font-size: 1.8em;
+        }
+
+    .btn-social-icon.btn-sm {
+        padding-left: 38px;
+    }
+
+        .btn-social-icon.btn-sm > :first-child {
+            line-height: 28px;
+            width: 28px;
+            font-size: 1.4em;
+        }
+
+    .btn-social-icon.btn-xs {
+        padding-left: 30px;
+    }
+
+        .btn-social-icon.btn-xs > :first-child {
+            line-height: 20px;
+            width: 20px;
+            font-size: 1.2em;
+        }
+
+    .btn-social-icon > :first-child {
+        border: none;
+        text-align: center;
+        width: 100% !important;
+    }
+
+    .btn-social-icon.btn-lg {
+        height: 45px;
+        width: 45px;
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .btn-social-icon.btn-sm {
+        height: 30px;
+        width: 30px;
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .btn-social-icon.btn-xs {
+        height: 22px;
+        width: 22px;
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+.btn-facebook {
+    color: #fff;
+    background-color: #3b5998;
+    border-color: rgba(0,0,0,0.2);
+}
+
+    .btn-facebook:focus, .btn-facebook.focus {
+        color: #fff;
+        background-color: #2d4373;
+        border-color: rgba(0,0,0,0.2);
+    }
+
+    .btn-facebook:hover {
+        color: #fff;
+        background-color: #2d4373;
+        border-color: rgba(0,0,0,0.2);
+    }
+
+    .btn-facebook:active, .btn-facebook.active, .open > .dropdown-toggle.btn-facebook {
+        color: #fff;
+        background-color: #2d4373;
+        border-color: rgba(0,0,0,0.2);
+    }
+
+        .btn-facebook:active:hover, .btn-facebook.active:hover, .open > .dropdown-toggle.btn-facebook:hover, .btn-facebook:active:focus, .btn-facebook.active:focus, .open > .dropdown-toggle.btn-facebook:focus, .btn-facebook:active.focus, .btn-facebook.active.focus, .open > .dropdown-toggle.btn-facebook.focus {
+            color: #fff;
+            background-color: #23345a;
+            border-color: rgba(0,0,0,0.2);
+        }
+
+    .btn-facebook:active, .btn-facebook.active, .open > .dropdown-toggle.btn-facebook {
+        background-image: none;
+    }
+
+    .btn-facebook.disabled, .btn-facebook[disabled], fieldset[disabled] .btn-facebook, .btn-facebook.disabled:hover, .btn-facebook[disabled]:hover, fieldset[disabled] .btn-facebook:hover, .btn-facebook.disabled:focus, .btn-facebook[disabled]:focus, fieldset[disabled] .btn-facebook:focus, .btn-facebook.disabled.focus, .btn-facebook[disabled].focus, fieldset[disabled] .btn-facebook.focus, .btn-facebook.disabled:active, .btn-facebook[disabled]:active, fieldset[disabled] .btn-facebook:active, .btn-facebook.disabled.active, .btn-facebook[disabled].active, fieldset[disabled] .btn-facebook.active {
+        background-color: #3b5998;
+        border-color: rgba(0,0,0,0.2);
+    }
+
+    .btn-facebook .badge {
+        color: #3b5998;
+        background-color: #fff;
+    }
+/*end footer*/
+    
+/*home page*/
+.img-round {
+    border-radius: 50%;
+}
+.img-subject{
+    padding:1px;
+    border:1px solid grey;
+}
+
+#mainContainer .subject-item {
+    right: 0;
+    margin: 0 0 15px;
+    background-color: white;
+     padding:0px;
+}
+#mainContainer .subject-item .subject-name{
+        display: block;
+    line-height: 1.3;
+    font-weight: bold;
+    font-size: 14px;
+    min-height: 33px;
+    max-height: 33px;
+    padding: 0;
+    margin: 10px 10px 5px;
+    color: rgb(53, 53, 53);
+
+}
+#mainContainer .subject-item .author-name{
+    color: #4D4D4D;
+    font-size: 13px;
+    min-height: 33px;
+    max-height: 33px;
+    margin: 0 10px 0;
+    display:block;
+}
+@media(min-width:767px) {
+    #mainContainer .subject-item {
+        margin: 0 0 30px;
+    }
+}
+/*end home page*/
+/*subject details*/
+.title {
+    font-size: 18px;
+    text-transform: uppercase;
+    margin: 0 0 .5em 0;
+    line-height: 1;
+    margin: 0 0 10px 0;
+    line-height: 1;
+    font-weight: bold;
+}
+
+@media (min-width: 768px) {
+    .timeline{
+        margin:30px 50px 20px 50px;
+    }
+}
+@media (max-width: 768px) {
+    .timeline{
+        margin:20px 10px 20px 10px;
+    }
+}
+
+.timeline-item {
+    cursor: pointer;
+    float: none;
+    left: auto;
+    right: auto;
+    width: 100%;
+    padding: 15px;
+    margin: 20px auto 0 auto;
+    background: #f6f6f6;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+    position: relative;
+    border: 1px solid #f2f2f2;
+    border-bottom: 3px solid #55a79a;
+    text-align: left;
+}
+
+.timeline-item:hover {
+    float: none;
+    left: auto;
+    right: auto;
+    width: 100%;
+    padding: 15px;
+    margin: 20px auto 0 auto;
+    background: #55a79a;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+    position: relative;
+    border: 1px solid #f2f2f2;
+    border-bottom: 3px solid #55a79a;
+    text-align: left;
+    color:white;
+}
+.timeline-item:after
+{
+     content: "\f054";
+    display: block;
+    position: absolute;
+    top: 50%;
+    right: 1rem;
+    color: #f6f6f6;
+    font-family: FontAwesome;
+    font-size: 2em;
+}
+
+/*subject details end*/
+
+/*lecture details*/
+@media (min-width: 992px) {
+  .sidebar {
+    margin-top: -20px;;
+  }
+  .sidebar.sidebar-right .inner,
+  .sidebar.sidebar-right .divider {
+    border-left: 1px solid #5c5c5c;
+    padding-left: 20px;
+  }
+  .sidebar.sidebar-left .inner,
+  .sidebar.sidebar-left .divider {
+    border-right: 1px solid #5c5c5c;
+    padding-right: 20px;
+  }
+}
+
+ a.violet-anchor,
+ a.violet-anchor:hover,
+ a.violet-anchor:focus,
+ a.violet-anchor.active {
+    outline: 0;
+    color: #563d7c;;
+}
+.active a{
+    cursor: default;
+}
+.timeline a
+{
+    color:black;
+    text-decoration: none;
+}
+
+/*lecture details end*/
+
+.block-anchor
+{
+    display: block;
+}
+.pointer-anchor
+{
+    cursor: pointer !important;
+}
+.container-full
+{
+    padding-left: 0px;
+    padding-right: 0px;
+}
+.white-anchor
+{
+    color:white !important;;
+}
+
+/*comment form*/
+
+.commentBox
+{
+    border:1px solid #bbb;
+    background-color:white;
+    margin:0px 5px 0px 5px;
+}
+
+.commenterImage {
+    width:30px;
+    margin-right:5px;
+    height:100%;
+    float:left;
+}
+.commenterImage img {
+    width:100%;
+    border-radius:50%;
+}
+
+.sub-text {
+    color:#aaa;
+    font-family:verdana;
+    font-size:11px;
+}
+
+.comment-holder
+{
+    padding-left: 8px;
+    zoom: 1;
+}
+.comment-delete-holder
+{
+    float:right;
+}
+.comment-block
+{
+    float:left;
+    padding:0px 12 px 0px 12px;
+    
+}
+.comment-content
+{
+    font-size: 12px;
+    word-wrap: break-word;
+    color:rgb(20, 24, 35);
+}
+.comment-row
+{
+    padding:5px;
+    border:#bbb;
+}
+.comment-title
+{
+    padding-left: 10px;
+}
+.user-comment-box
+{
+    margin: 0px 5px 0px 5px;
+    padding:0px 1px 0px 1px;
+}
+/*end comment*/
+
+
+/*Search session*/
+.search-holder
+{
+    margin: 10px 10px 15px 10px;
+}
+.search-img
+{
+    width:100%;
+    height:auto;
+    max-width:190px;
+    float:right;
+}
+
+.search-holder p {
+    margin:0px 0px 5px 5px;
+}
+.search-holder h3
+{
+    margin:5px;
+    color:black !important;
+}
+.search-holder h3 a
+{
+    color:black !important;
+}
+
+.gray-hr
+{
+    border-top: 1px solid gray !important;
+}
+
+#MainContainer .blog-content img
+{
+    max-width: 100% !important;
+    height: auto;
+}
+
+#comments, #comments li {
+    margin: 0;
+    padding: 0;
+}
+ 
+#comments li {
+    list-style: none;
+}

@@ -1,0 +1,155 @@
+<div class="row">
+    <div class="col-md-3">
+        <h3 class=" pull-left">Articles Management.</h3>
+    </div>
+</div>
+<!--search form-->
+<div class="row">
+    <div class="col-md-7">
+        <form name="searchForm" class="form-horizontal" novalidate ng-submit="query();">
+            <div class="form-group">
+                <select class="single-line" name="isActive" ng-model="search.isActive">
+                    <option value="">Active</option>
+                    <option value="true">Yes</option>
+                    <option value="false">No</option>
+                </select>
+                <input class="text-box single-line" placeholder="Key word" name="keyword" ng-model="search.keyword" ng-minlength="1" ng-maxlength="30"
+                />
+                <input type="submit" value="Search" class="btn btn-md btn-default" />
+            </div>
+        </form>
+    </div>
+    <div class="col-md-5 text-right"><a class="btn btn-md btn-primary" ng-click="addNew(form)">New Article</a></div>
+</div>
+
+<div class="row">
+    <table class="table table-bordered table-hover tableAdmin">
+        <tr>
+            <th>Name</th>
+            <th>Is Active</th>
+            <th>Author</th>
+            <th>Created Date</th>
+            <th>Updated Date</th>
+            <th></th>
+        </tr>
+        <tr data-id="{{item.id}}" ng-repeat="item in listItem" ng-class="{ 'active' : item.id == newEditForm.id}">
+            <td width="17%">{{item.name}}</td>
+            <td width="10%%">{{item.isActive}}</td>
+            <td width="15%">{{item.createdBy.name}}</td>
+            <td width="15%">{{item.createdAt | date:"dd/MM/yyyy h:mma"}}</td>
+            <td width="15%">{{item.updatedAt | date:"dd/MM/yyyy h:mma"}}</td>
+            <td width="11%" class="text-center">
+                <a ng-click="edit(item.id,form);" class="btn btn-sm btn-warning">Edit</a>
+                <a ng-click="delete(item.id)" confirm="Bạn có muốn xóa {{item.name}}?" class="btn btn-sm btn-danger">Delete</a>
+            </td>
+        </tr>
+    </table>
+    <uib-pagination total-items="totalItems" ng-model="currentPage" max-size="$root.maxPagingSize" class="pagination-sm" boundary-links="true"
+    rotate="false" num-pages="numPages" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"
+    items-per-page="$root.itemsPerPage" ng-change="query();"></uib-pagination>
+</div>
+
+<!--edit form-->
+<div class="row" ng-hide="!isDisplayForm">
+    <div class="col-md-10 col-md-offset-1">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Create/Edit Article.</h3>
+            </div>
+            <div class="panel-body">
+                <form name="form" method="post" novalidate ng-submit="submitForm(form.$valid)">
+                    <fieldset>
+
+                        <div class="form-group" ng-class="{ 'has-error' : form.name.$invalid && !form.name.$pristine && form.$submitted }">
+                            <label>Name</label>
+                            <input type="text" class="form-control" placeholder="Name" name="name" ng-model="newEditForm.name" ng-minlength="2" ng-maxlength="128"
+                            required />
+                            <div ng-messages="form.name.$error" ng-if="form.$submitted" class="error-message">
+                                <span ng-message="minlength">Name must be more than 2 chars long.</span>
+                                <span ng-message="maxlength">Name must be less than 128 chars long.</span>
+                                <span ng-message="required">Name is required.</span>
+                            </div>
+                        </div>
+                        <div class="form-group" ng-class="{ 'has-error' : form.description.$invalid && !form.description.$pristine && form.$submitted }">
+                            <label>Desription</label>
+                            <input type="text" class="form-control" placeholder="Description" name="description" ng-model="newEditForm.description" ng-minlength="2"
+                            ng-maxlength="128" required />
+                            <div ng-messages="form.description.$error" ng-if="form.$submitted" class="error-message">
+                                <span ng-message="minlength">Desription must be more than 2 chars long.</span>
+                                <span ng-message="maxlength">Desription must be less than 128 chars long.</span>
+                                <span ng-message="required">Desription is required.</span>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group" flow-init="{singleFile:true}" flow-name="uploader.flow" flow-files-submitted="upload($files, $event, $flow)"
+                        flow-file-success="$file.msg = $message">
+                            <span class="btn btn-primary" ng-show="!$flow.files.length && newEditForm.oldImage.thumbnail == null" flow-btn="">Select Image (800*600)<input type="file" style="visibility: hidden; position: absolute;"></span>
+                            <span class="btn btn-info" ng-show="$flow.files.length || newEditForm.oldImage.thumbnail != null" flow-btn="">Change<input type="file" style="visibility: hidden; position: absolute;"></span>
+                            <span class="btn btn-danger" id="removeImg" ng-show="$flow.files.length" ng-hide="firstLoad || newEditForm.oldImage.thumbnail == null"
+                            ng-click="$flow.cancel();removeImage();">Xóa</span>
+
+                            <div ng-show="newEditForm.oldImage.thumbnail == null && !$flow.files.length">
+                                <!--new case-->
+                                <img src="http://www.placehold.it/200x150/EFEFEF/AAAAAA&text=no+image" class="thumbnail" />
+                            </div>
+
+                            <div ng-show="firstLoad && newEditForm.oldImage.thumbnail != null">
+                                <!--edit case-->
+                                <img src="{{newEditForm.oldImage.thumbnail}}" class="thumbnail" />
+                            </div>
+
+                            <div ng-show="$flow.files.length" ng-hide="firstLoad">
+                                <!--newly uploaded image-->
+                                <img flow-img="$flow.files[0]" class="thumbnail" />
+                            </div>
+
+                            <input type="hidden" ng-model="newEditForm.image" name="image" required/>
+                            <div ng-messages="form.image.$error" ng-if="form.$submitted" class="error-message">
+                                <span ng-message="required">Bạn upload ảnh.</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group" ng-class="{ 'has-error' : form.isActive.$invalid && !form.isActive.$pristine && form.$submitted }">
+                            <label>
+                                Active
+                            </label>
+                            <select class="form-control" name="isActive" required ng-model="newEditForm.isActive">
+                                <option value="">Select</option>
+                                <option value="1">Yes</option>
+                                <option value="0">No</option>
+                            </select>
+                            <div ng-messages="form.isActive.$error" ng-if="form.$submitted" class="error-message">
+                                <span ng-message="required">Active is required.</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group" ng-show="newEditForm.isActive==0">
+                            <label>In Active reason</label>
+                            <input type="text" class="form-control" placeholder="Lí do" name="inActiveReason" ng-model="newEditForm.inActiveReason" />
+                        </div>
+
+                        <div class="form-group has-error">
+                            <label>Content</label>
+                            <div ng-ckeditor ckeditor="editorOptions" ng-model="newEditForm.content">
+                            </div>
+                            <div ng-if="form.$submitted && newEditForm.content.length < 10" class="error-message">
+                                <span>Content is required</span>
+                            </div>
+                        </div>
+
+                        <input type="hidden" class="form-control" name="id" ng-model="newEditForm.id" />
+                        <div class="form-group error-message" ng-if="err">
+                            {{msg}}
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" class="btn btn-primary" />
+                            <!--<input type="reset" class="btn btn-warning" />-->
+                            <input type="button" value="Cancel" class="btn btn-danger" ng-click="isDisplayForm=false" />
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

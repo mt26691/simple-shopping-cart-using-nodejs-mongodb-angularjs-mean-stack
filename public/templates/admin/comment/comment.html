@@ -1,0 +1,106 @@
+<div class="row">
+    <div class="col-md-3">
+        <h3>Comment.</h3>
+    </div>
+</div>
+<!--search form-->
+<div class="row">
+    <div class="col-md-7">
+        <form name="searchForm" class="form-horizontal" novalidate ng-submit="query()">
+            <div class="form-group">
+                <select class="single-line" name="isActive" ng-model="search.isActive">
+                    <option value="">Is active</option>
+                    <option value="true">Yes</option>
+                    <option value="false">No</option>
+                </select>
+
+                <input class="text-box single-line" placeholder="Key word" name="keyword" ng-model="search.keyword" ng-minlength="1" ng-maxlength="30"
+                />
+                <input type="submit" value="Search" class="btn btn-md btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="row">
+    <table class="table table-bordered table-hover tableAdmin">
+        <tr>
+            <th>Article</th>
+            <th>Content</th>
+            <th>Author</th>
+            <th>Created Date</th>
+            <th>Updated Date</th>
+            <th>Action</th>
+        </tr>
+        <tr data-id="{{item.id}}" ng-repeat="item in listItem" ng-class="{ 'active' : item.id == newEditForm.id}">
+            <td width="15%"><a href="/{{item.article.nameUrl}}/{{item.article.id}}" target="_seft">{{item.article.name}}</a> </td>
+            <td width="10%">{{item.isActive}}</td>
+            <td width="15%">{{item.createdBy.email}}</td>
+            <td width="15%">{{item.createdAt | date:"dd/MM/yyyy h:mma"}}</td>
+            <td width="15%">{{item.updatedAt | date:"dd/MM/yyyy h:mma"}}</td>
+            <td width="11%" class="text-center">
+                <a ng-click="edit(item.id,form)" class="btn btn-sm btn-warning">Edit</a>
+                <a ng-click="delete(item.id)" confirm="Bạn có muốn xóa comment?" class="btn btn-sm btn-danger">Delete</a>
+            </td>
+        </tr>
+    </table>
+    <uib-pagination total-items="totalItems" ng-model="currentPage" max-size="$root.maxPagingSize" class="pagination-sm" boundary-links="true"
+    rotate="false" num-pages="numPages" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"
+    items-per-page="$root.itemsPerPage" ng-change="query()"></uib-pagination>
+</div>
+
+<!--edit form-->
+<div class="row" ng-hide="!isDisplayForm">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Edit Comment.</h3>
+            </div>
+            <div class="panel-body">
+                <form name="form" method="post" novalidate ng-submit="submitForm(form.$valid)">
+                    <fieldset>
+
+                        <div class="form-group" ng-class="{ 'has-error' : form.isActive.$invalid && !form.isActive.$pristine && form.$submitted }">
+                            <label>
+                                Is Active
+                            </label>
+                            <select class="form-control" name="isActive" required ng-model="newEditForm.isActive">
+                                <option value="">Select</option>
+                                <option value="1">Yes</option>
+                                <option value="0">No</option>
+                            </select>
+                            <div ng-messages="form.isActive.$error" ng-if="form.$submitted" class="error-message">
+                                <span ng-message="required">Is Active is required.</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group" ng-show="newEditForm.isActive==0">
+                            <label>Inactive reason</label>
+                            <input type="text" class="form-control" placeholder="Inactive reason" name="inActiveReason" ng-model="newEditForm.inActiveReason"
+                            />
+                        </div>
+
+                        <div class="form-group has-error">
+                            <label>Content</label>
+                            <div ng-ckeditor ckeditor="editorOptions" ng-model="newEditForm.content">
+                            </div>
+                            <div ng-if="form.$submitted && newEditForm.content.length < 10" class="error-message">
+                                <span>Content is required</span>
+                            </div>
+                        </div>
+
+                        <input type="hidden" class="form-control" name="id" ng-model="newEditForm.id" />
+                        <div class="form-group error-message" ng-if="err">
+                            {{msg}}
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" value="Gởi" class="btn btn-primary" />
+                            <!--<input type="reset" class="btn btn-warning" />-->
+                            <input type="button" value="Đóng" class="btn btn-danger" ng-click="isDisplayForm=false" />
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
