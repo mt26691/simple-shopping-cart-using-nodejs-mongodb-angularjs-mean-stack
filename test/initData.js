@@ -101,31 +101,31 @@ module.exports = function (callback) {
                         //0
                         {
                             name: "product 01", slug: "product-01", short_description: "short", description: "des00",
-                            price: { retail: 100, sale: 90, stock: 80 }, primary_category: data.newCategories[0].id,
+                            pricing: { retail: 100, sale: 90, stock: 80 }, primary_category: data.newCategories[0].id,
                             createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id
                         },
                         //1
                         {
                             name: "product 02", slug: "product-02", short_description: "short", description: "des01",
-                            price: { retail: 100, sale: 90, stock: 80 }, primary_category: data.newCategories[0].id,
+                            pricing: { retail: 100, sale: 90, stock: 80 }, primary_category: data.newCategories[0].id,
                             createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id
                         },
                         //2
                         {
                             name: "product 03", slug: "product-03", short_description: "short", description: "des02",
-                            price: { retail: 100, sale: 90, stock: 80 }, primary_category: data.newCategories[0].id,
+                            pricing: { retail: 100, sale: 90, stock: 80 }, primary_category: data.newCategories[0].id,
                             createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id
                         },
                         //4
                         {
                             name: "product 04", slug: "product-04", short_description: "short", description: "des03",
-                            price: { retail: 100, sale: 90, stock: 80 }, primary_category: data.newCategories[0].id,
+                            pricing: { retail: 100, sale: 90, stock: 80 }, primary_category: data.newCategories[0].id,
                             createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id
                         },
                         //5
                         {
                             name: "product 05", slug: "product-05", short_description: "short", description: "des04",
-                            price: { retail: 100, sale: 90, stock: 80 }, primary_category: data.newCategories[0].id,
+                            pricing: { retail: 100, sale: 90, stock: 80 }, primary_category: data.newCategories[0].id,
                             createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id
                         },
                     ];
