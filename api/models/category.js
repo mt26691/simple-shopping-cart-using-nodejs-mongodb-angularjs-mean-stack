@@ -26,8 +26,8 @@ var categorySchema = new mongoose.Schema({
         minlength: 2,
         maxlength: 256
     },
-    parent_id: this,
-    ancestors: [this],
+    parent_id: { type: Schema.Types.ObjectId, ref: 'Category' },
+    ancestors: [{ type: Schema.Types.ObjectId, ref: 'Category' }],
 
     //set default createdAt and updatedAt
     createdAt: { type: Date, default: Date.now },

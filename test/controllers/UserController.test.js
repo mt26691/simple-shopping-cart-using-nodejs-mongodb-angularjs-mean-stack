@@ -21,7 +21,7 @@ describe('User admin controller test', function() {
         });
     });
     //query method in /api/controllers/v1/admin/UserController.js  
-    it('should not let normal user query all users', function(done) {
+    it.only('should not let normal user query all users', function(done) {
         var apiAuth = testConfig.apiLogin;
         server
             .post(apiAuth)

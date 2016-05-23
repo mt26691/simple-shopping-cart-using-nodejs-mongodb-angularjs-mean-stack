@@ -51,7 +51,6 @@ module.exports = function (callback) {
             { name: "Article 08", nameUrl: "article-01", description: "description 06", content: "content", inActiveReason: "Not Valid", isActive: false, createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id },
         ];
 
-
         //create new articles
         Article.create(data.oldArticles, function (err, articles) {
             data.newArticles = articles;
@@ -75,11 +74,11 @@ module.exports = function (callback) {
 
                 data.oldCategories = [
                     //0
-                    { name: "category 01", slug: "category-01", description: "description 01", createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id },
+                    { name: "Sport", slug: "Sport", description: "description 01", createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id },
                     //1
-                    { name: "category 02", slug: "category-02", description: "description 02", createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id },
+                    { name: "Football", slug: "football", description: "description 02", createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id },
                     //2
-                    { name: "category 03", slug: "category-03", description: "description 03", createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id },
+                    { name: "Football wear", slug: "football-wear", description: "description 03", createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id },
                     //4
                     { name: "category 04", slug: "category-04", description: "description 04", createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id },
                     //5
@@ -88,7 +87,16 @@ module.exports = function (callback) {
 
                 Category.create(data.oldCategories, function (err, newCategories) {
                     data.newCategories = newCategories;
-
+                    //add parent category
+                    data.newCategories[1].parent_id = newCategories[0].id;
+                    data.newCategories[1].ancestors.push(newCategories[0].id);
+                    data.newCategories[2].parent_id = newCategories[1].id;
+                    //add ancestors category
+                    data.newCategories[2].ancestors.push(newCategories[0].id);
+                    data.newCategories[2].ancestors.push(newCategories[1].id);
+                    
+                    data.newCategories[1].save();
+                    data.newCategories[2].save();
                     data.oldProducts = [
                         //0
                         {
@@ -122,9 +130,12 @@ module.exports = function (callback) {
                         },
                     ];
 
-                    callback(data);
-                })
+                    Product.create(data.oldProducts, function (err, newProducts) {
+                        data.newProducts = newProducts;
+                        callback(data);
+                    });
 
+                })
 
             });
 
