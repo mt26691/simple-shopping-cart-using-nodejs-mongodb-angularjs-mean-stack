@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 var webConfig = require("../config/WebConfig");
 var Schema = mongoose.Schema;
 var emailService = require("../services/EmailService");
-var price = require("price");
+var price = require("./price");
 
 //product schema
 var productSchema = new mongoose.Schema({
@@ -29,7 +29,6 @@ var productSchema = new mongoose.Schema({
     //product's description
     short_description: {
         type: String,
-        required: true,
         minlength: 0,
         maxlength: 256
     },

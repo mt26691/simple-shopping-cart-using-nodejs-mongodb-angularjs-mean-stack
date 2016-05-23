@@ -6,7 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 //connect to database, you only need to connect to database one time only
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/simple-blog');
+mongoose.connect('mongodb://localhost:27017/simple-shopping-cart');
 
 //route
 var routes = require('./api/routes/index');

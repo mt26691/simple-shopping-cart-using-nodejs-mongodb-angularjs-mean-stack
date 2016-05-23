@@ -1,12 +1,15 @@
 var data = { oldUsers: [], newUsers: [] };
-module.exports = function(callback) {
+module.exports = function (callback) {
     var models = require('../api/models/models')();
 
     var User = models.User;
     var Article = models.Article;
     var AccessToken = models.AccessToken;
     var Comment = models.Comment;
-    
+    var Category = models.Category;
+    var Product = models.Product;
+    var Order = models.Order;
+
     data.oldUsers = [
         //0 normal user
         { name: "user01", email: "user01@gmail.com", password: "123456", role: "normal" },
@@ -18,60 +21,113 @@ module.exports = function(callback) {
         { name: "user06", email: "user06@gmail.com", password: "123456", role: "normal" },
     ];
 
-    //remove all user in database
-    User.remove({}, function() {
-        User.create(data.oldUsers, function(err, users) {
-            data.newUsers = users;
-            AccessToken.remove({}, function(err) {
-            });
+    var mongoose = require('mongoose');
+    /* Connect to the DB */
+    mongoose.connect('mongodb://localhost:27017/simple-shopping-cart', function () {
+        /* Drop the DB */
+        mongoose.connection.db.dropDatabase();
+    });
 
-            data.oldArticles = [
+
+    User.create(data.oldUsers, function (err, users) {
+        data.newUsers = users;
+
+        data.oldArticles = [
+            //0
+            { name: "Article 01", nameUrl: "article-01", description: "description 01", content: "content", isActive: true, createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id },
+            //1
+            { name: "Article 02", nameUrl: "article-01", description: "description 02", content: "content", isActive: true, createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id },
+            //2
+            { name: "Article 03", nameUrl: "article-01", description: "description 03", content: "content", isActive: true, createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id },
+            //3
+            { name: "Article 04", nameUrl: "article-01", description: "description 04", content: "content", inActiveReason: "Not valid", isActive: true, createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id },
+            //4
+            { name: "Article 05", nameUrl: "article-01", description: "description 05", content: "content", inActiveReason: "Not Valid", isActive: true, createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id },
+            //5
+            { name: "Article 06", nameUrl: "article-01", description: "description 06", content: "content", inActiveReason: "Not Valid", isActive: true, createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id },
+            //6
+            { name: "Article 07", nameUrl: "article-01", description: "description 06", content: "content", inActiveReason: "Not Valid", isActive: true, createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id },
+            //7
+            { name: "Article 08", nameUrl: "article-01", description: "description 06", content: "content", inActiveReason: "Not Valid", isActive: false, createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id },
+        ];
+
+
+        //create new articles
+        Article.create(data.oldArticles, function (err, articles) {
+            data.newArticles = articles;
+            data.oldComments = [
                 //0
-                { name: "Article 01", nameUrl: "article-01", description: "description 01", content: "content", isActive: true, createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id },
+                { content: "Comment content 1", isActive: true, article: data.newArticles[0].id, createdBy: data.newUsers[0].id, updatedBy: data.newUsers[1].id },
                 //1
-                { name: "Article 02", nameUrl: "article-01", description: "description 02", content: "content", isActive: true, createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id },
+                { content: "Comment content 2", isActive: true, article: data.newArticles[1].id, createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id },
                 //2
-                { name: "Article 03", nameUrl: "article-01", description: "description 03", content: "content", isActive: true, createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id },
+                { content: "Comment content 03", isActive: true, article: data.newArticles[1].id, createdBy: data.newUsers[2].id, updatedBy: data.newUsers[1].id },
                 //3
-                { name: "Article 04", nameUrl: "article-01", description: "description 04", content: "content", inActiveReason: "Not valid", isActive: true, createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id },
+                { content: "Comment content 04", isActive: false, article: data.newArticles[1].id, createdBy: data.newUsers[3].id, updatedBy: data.newUsers[1].id },
                 //4
-                { name: "Article 05", nameUrl: "article-01", description: "description 05", content: "content", inActiveReason: "Not Valid", isActive: true, createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id },
+                { content: "Comment content 05", isActive: false, article: data.newArticles[1].id, createdBy: data.newUsers[2].id, updatedBy: data.newUsers[1].id },
                 //5
-                { name: "Article 06", nameUrl: "article-01", description: "description 06", content: "content", inActiveReason: "Not Valid", isActive: true, createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id },
-                //6
-                { name: "Article 07", nameUrl: "article-01", description: "description 06", content: "content", inActiveReason: "Not Valid", isActive: true, createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id },
-                //7
-                { name: "Article 08", nameUrl: "article-01", description: "description 06", content: "content", inActiveReason: "Not Valid", isActive: false, createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id },
+                { content: "Comment content 06", isActive: false, article: data.newArticles[1].id, createdBy: data.newUsers[4].id, updatedBy: data.newUsers[1].id },
             ];
-            //remove all articles in database
-            Article.remove({}, function() {
-                //create new articles
-                Article.create(data.oldArticles, function(err, articles) {
-                    data.newArticles = articles;
-                    data.oldComments = [
+
+            Comment.create(data.oldComments, function (err, newComments) {
+                data.newComments = newComments;
+
+                data.oldCategories = [
+                    //0
+                    { name: "category 01", slug: "category-01", description: "description 01", createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id },
+                    //1
+                    { name: "category 02", slug: "category-02", description: "description 02", createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id },
+                    //2
+                    { name: "category 03", slug: "category-03", description: "description 03", createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id },
+                    //4
+                    { name: "category 04", slug: "category-04", description: "description 04", createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id },
+                    //5
+                    { name: "category 05", slug: "category-05", description: "description 05", createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id },
+                ];
+
+                Category.create(data.oldCategories, function (err, newCategories) {
+                    data.newCategories = newCategories;
+
+                    data.oldProducts = [
                         //0
-                        { content: "Comment content 1", isActive: true, article: data.newArticles[0].id, createdBy: data.newUsers[0].id, updatedBy: data.newUsers[1].id },
+                        {
+                            name: "product 01", slug: "product-01", short_description: "short", description: "des00",
+                            price: { retail: 100, sale: 90, stock: 80 }, primary_category: data.newCategories[0].id,
+                            createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id
+                        },
                         //1
-                        { content: "Comment content 2", isActive: true, article: data.newArticles[1].id, createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id },
+                        {
+                            name: "product 02", slug: "product-02", short_description: "short", description: "des01",
+                            price: { retail: 100, sale: 90, stock: 80 }, primary_category: data.newCategories[0].id,
+                            createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id
+                        },
                         //2
-                        { content: "Comment content 03", isActive: true, article: data.newArticles[1].id, createdBy: data.newUsers[2].id, updatedBy: data.newUsers[1].id },
-                        //3
-                        { content: "Comment content 04", isActive: false, article: data.newArticles[1].id, createdBy: data.newUsers[3].id, updatedBy: data.newUsers[1].id },
+                        {
+                            name: "product 03", slug: "product-03", short_description: "short", description: "des02",
+                            price: { retail: 100, sale: 90, stock: 80 }, primary_category: data.newCategories[0].id,
+                            createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id
+                        },
                         //4
-                        { content: "Comment content 05", isActive: false, article: data.newArticles[1].id, createdBy: data.newUsers[2].id, updatedBy: data.newUsers[1].id },
+                        {
+                            name: "product 04", slug: "product-04", short_description: "short", description: "des03",
+                            price: { retail: 100, sale: 90, stock: 80 }, primary_category: data.newCategories[0].id,
+                            createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id
+                        },
                         //5
-                        { content: "Comment content 06", isActive: false, article: data.newArticles[1].id, createdBy: data.newUsers[4].id, updatedBy: data.newUsers[1].id },
+                        {
+                            name: "product 05", slug: "product-05", short_description: "short", description: "des04",
+                            price: { retail: 100, sale: 90, stock: 80 }, primary_category: data.newCategories[0].id,
+                            createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id
+                        },
                     ];
 
-                    Comment.remove({}, function(err, result) {
-                        Comment.create(data.oldComments, function(err, newComments) {
-                            data.newComments = newComments;
-                            callback(data);
-                        });
+                    callback(data);
+                })
 
-                    });
-                });
+
             });
+
         });
     });
 };  

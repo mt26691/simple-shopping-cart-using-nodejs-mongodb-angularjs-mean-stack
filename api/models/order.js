@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 var webConfig = require("../config/WebConfig");
 var Schema = mongoose.Schema;
 var emailService = require("../services/EmailService");
-var product = require("product");
+var product = require("./product");
 
 //product schema
 var orderSchema = new mongoose.Schema({
@@ -13,7 +13,7 @@ var orderSchema = new mongoose.Schema({
     line_items: [
         {
             product_id: { type: Schema.Types.ObjectId, ref: 'Product' },
-            quantity: 1,
+            quantity: { type: Number, min: 0 },
             pricing: { type: Number, min: 0 },
         }
     ],
