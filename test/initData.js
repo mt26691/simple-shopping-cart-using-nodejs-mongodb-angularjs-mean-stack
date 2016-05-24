@@ -80,9 +80,11 @@ module.exports = function (callback) {
                     //2
                     { name: "Football wear", slug: "football-wear", description: "description 03", createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id },
                     //4
-                    { name: "category 04", slug: "category-04", description: "description 04", createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id },
+                    { name: "category 01", slug: "category-01", description: "description 04", createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id },
                     //5
-                    { name: "category 05", slug: "category-05", description: "description 05", createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id },
+                    { name: "category 02", slug: "category-02", description: "description 05", createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id },
+                    //6
+                    { name: "category 03", slug: "category-03", description: "description 05", createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id },
                 ];
 
                 Category.create(data.oldCategories, function (err, newCategories) {

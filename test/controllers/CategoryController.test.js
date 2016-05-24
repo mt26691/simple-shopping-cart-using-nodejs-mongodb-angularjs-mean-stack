@@ -9,14 +9,14 @@ var initData = require('../initData');
 * See /api/controllers/v1/admin/CategoryController.js  
 * and /api/routes/categoryRoutes.js for more details
 */
-describe('Admin Category Controller Test', function() {
+describe('Admin Category Controller Test', function () {
     var newUsers = [];
     var oldUsers = [];
     var newCategories = [];
     var oldCategories = [];
 
-    beforeEach(function(done) {
-        initData(function(returnData) {
+    beforeEach(function (done) {
+        initData(function (returnData) {
             newUsers = returnData.newUsers;
             oldUsers = returnData.oldUsers;
             newCategories = returnData.newCategories;
@@ -26,19 +26,18 @@ describe('Admin Category Controller Test', function() {
     });
 
     //query method in in /api/controllers/v1/CategoryController.js
-    it('should not let normal user query all categories', function(done) {
-        var apiLogin = testConfig.apiLogin;
+    it('should not let normal user query all categories', function (done) {
         server
-            .post(apiLogin)
+            .post(testConfig.apiLogin)
             .send(oldUsers[0])  // Log in as normal user
             .expect('Content-type', /json/)
             .expect(200)
-            .end(function(err, res) {
+            .end(function (err, res) {
                 res.status.should.equal(200); // OK
                 server
                     .get(apiURL)  // Attempt to use CategoryController (see api/routes/categoryRoutes.js)
                     .expect('Content-type', /json/)
-                    .end(function(err, res) {
+                    .end(function (err, res) {
                         res.status.should.equal(401);  // 401: Unauthorized!
                         done();
                     });
@@ -47,19 +46,19 @@ describe('Admin Category Controller Test', function() {
     });
 
     //query method in /api/controllers/v1/CategoryController.js
-    it('should let only admin query categories', function(done) {
+    it('should let only admin query categories', function (done) {
         var apiAuth = testConfig.apiLogin;
         server
             .post(apiAuth)
             .send(oldUsers[1])  // log in as admin
             .expect('Content-type', /json/)
-            .end(function(err, res) {
+            .end(function (err, res) {
                 res.status.should.equal(200);
                 assert.equal(true, !res.body.err);  // check if login is ok
                 server
                     .get(apiURL)  // query lastest categories
                     .expect('Content-type', /json/)
-                    .end(function(err, res) {
+                    .end(function (err, res) {
                         res.status.should.equal(200);  // query OK because I am ADMIN 
                         // Check returned data
                         var returnData = res.body.data;
@@ -75,13 +74,13 @@ describe('Admin Category Controller Test', function() {
     });
 
     //query method in /api/controllers/v1/CategoryController.js with param: page 2
-    it('should let admin query categories in page 2', function(done) {
+    it('should let admin query categories in page 2', function (done) {
         var apiAuth = testConfig.apiLogin;
         server
             .post(apiAuth)
             .send(oldUsers[1])  // log in as admin
             .expect('Content-type', /json/)
-            .end(function(err, res) {
+            .end(function (err, res) {
                 res.status.should.equal(200);
 
                 assert.equal(true, !res.body.err);  // check if login is ok
@@ -90,7 +89,7 @@ describe('Admin Category Controller Test', function() {
                 server
                     .get(queryUrl)  // query categories in pages 2
                     .expect('Content-type', /json/)
-                    .end(function(err, res) {
+                    .end(function (err, res) {
                         res.status.should.equal(200);  // query OK because I am ADMIN 
 
                         // Check returned data
@@ -109,13 +108,13 @@ describe('Admin Category Controller Test', function() {
     });
 
     //query method in /api/controllers/v1/CategoryController.js with keyword = category 06
-    it('should let admin query categories which name contains category 06', function(done) {
+    it('should let admin query categories which name contains category 06', function (done) {
         var apiAuth = testConfig.apiLogin;
         server
             .post(apiAuth)
             .send(oldUsers[1])  // log in as admin
             .expect('Content-type', /json/)
-            .end(function(err, res) {
+            .end(function (err, res) {
                 res.status.should.equal(200);
 
                 assert.equal(true, !res.body.err);  // check if login is ok
@@ -124,7 +123,7 @@ describe('Admin Category Controller Test', function() {
                 server
                     .get(queryUrl)  // query category
                     .expect('Content-type', /json/)
-                    .end(function(err, res) {
+                    .end(function (err, res) {
                         res.status.should.equal(200);  // query OK because I am ADMIN 
 
                         // Check returned data
@@ -143,13 +142,13 @@ describe('Admin Category Controller Test', function() {
     });
 
     //query method in /api/controllers/v1/CategoryController.js with keyword = category, page = 2
-    it('should let admin query user which name contains category in page 2', function(done) {
+    it('should let admin query user which name contains category in page 2', function (done) {
         var apiAuth = testConfig.apiLogin;
         server
             .post(apiAuth)
             .send(oldUsers[1])  // log in as admin
             .expect('Content-type', /json/)
-            .end(function(err, res) {
+            .end(function (err, res) {
                 res.status.should.equal(200);
 
                 assert.equal(true, !res.body.err);  // check if login is ok
@@ -157,7 +156,7 @@ describe('Admin Category Controller Test', function() {
                 server
                     .get(queryUrl)  // query categories
                     .expect('Content-type', /json/)
-                    .end(function(err, res) {
+                    .end(function (err, res) {
                         res.status.should.equal(200);  // query OK because I am ADMIN 
 
                         // Check returned data
@@ -176,20 +175,20 @@ describe('Admin Category Controller Test', function() {
     });
 
     // get in /api/controllers/v1/CategoryController.js
-    it('should not let normal user query category by its id', function(done) {
+    it('should not let normal user query category by its id', function (done) {
         var apiAuth = testConfig.apiLogin;
         server
             .post(apiAuth)
             .send(oldUsers[0])  // Log in as normal user
             .expect('Content-type', /json/)
             .expect(200)
-            .end(function(err, res) {
+            .end(function (err, res) {
                 res.status.should.equal(200); // OK
                 server
                     .get(apiURL + "/" + newCategories[0].id)
                     .expect('Content-type', /json/)
                     .expect(401)
-                    .end(function(err, res) {
+                    .end(function (err, res) {
                         //forbidden, because you are not admin
                         res.status.should.equal(401);
                         done();
@@ -198,20 +197,20 @@ describe('Admin Category Controller Test', function() {
     });
 
     // get in /api/controllers/v1/CategoryController.js
-    it('should let admin query category by its id', function(done) {
+    it('should let admin query category by its id', function (done) {
         var apiAuth = testConfig.apiLogin;
         server
             .post(apiAuth)
             .send(oldUsers[1])  // log in as admin
             .expect('Content-type', /json/)
-            .end(function(err, res) {
+            .end(function (err, res) {
                 res.status.should.equal(200);
 
                 server
                     .get(apiURL + "/" + newCategories[0].id)
                     .expect('Content-type', /json/)
                     .expect(200)
-                    .end(function(err, res) {
+                    .end(function (err, res) {
                         res.status.should.equal(200);
                         // Check returned subject
                         var returnedData = res.body;
@@ -227,7 +226,7 @@ describe('Admin Category Controller Test', function() {
     });
 
     // post in /api/controllers/v1/CategoryController.js
-    it('should not let normal user create/update category', function(done) {
+    it('should not let normal user create/update category', function (done) {
         var updatingCategory = newCategories[0];
         updatingCategory.name = "test new name";
 
@@ -236,7 +235,7 @@ describe('Admin Category Controller Test', function() {
             .post(apiAuth)
             .send(oldUsers[0])  // log in as admin normal user
             .expect('Content-type', /json/)
-            .end(function(err, res) {
+            .end(function (err, res) {
                 res.status.should.equal(200);
 
                 assert.equal(true, !res.body.err);  // check if login is ok
@@ -245,7 +244,7 @@ describe('Admin Category Controller Test', function() {
                     .send(updatingCategory)
                     .expect("Content-type", /json/)
                     .expect(401)
-                    .end(function(err, res) {
+                    .end(function (err, res) {
                         //forbidden
                         res.status.should.equal(401);
                         done();
@@ -255,7 +254,7 @@ describe('Admin Category Controller Test', function() {
     });
 
     // post in /api/controllers/v1/CategoryController.js
-    it('should let admin create category', function(done) {
+    it('should let admin create category', function (done) {
         var newlyCategory = oldCategories[0];
         newlyCategory.name = "test new category";
 
@@ -264,7 +263,7 @@ describe('Admin Category Controller Test', function() {
             .post(apiAuth)
             .send(oldUsers[1])  // log in as admin
             .expect('Content-type', /json/)
-            .end(function(err, res) {
+            .end(function (err, res) {
                 res.status.should.equal(200);
 
                 assert.equal(true, !res.body.err);  // check if login is ok
@@ -273,7 +272,7 @@ describe('Admin Category Controller Test', function() {
                     .send(newlyCategory)
                     .expect("Content-type", /json/)
                     .expect(200)
-                    .end(function(err, res) {
+                    .end(function (err, res) {
                         res.status.should.equal(200);
                         assert.equal(false, res.body.err);
                         assert.equal(newlyCategory.name, res.body.data.name);
@@ -285,7 +284,7 @@ describe('Admin Category Controller Test', function() {
     });
 
     // post in /api/controllers/v1/CategoryController.js
-    it('should let admin update category', function(done) {
+    it('should let admin update category', function (done) {
         var updatingCategory = newCategories[0];
         updatingCategory.name = "test new category";
         var apiAuth = testConfig.apiLogin;
@@ -293,7 +292,7 @@ describe('Admin Category Controller Test', function() {
             .post(apiAuth)
             .send(oldUsers[1])  // log in as admin
             .expect('Content-type', /json/)
-            .end(function(err, res) {
+            .end(function (err, res) {
                 res.status.should.equal(200);
 
                 assert.equal(true, !res.body.err);  // check if login is ok
@@ -302,7 +301,7 @@ describe('Admin Category Controller Test', function() {
                     .send(updatingCategory)
                     .expect("Content-type", /json/)
                     .expect(200)
-                    .end(function(err, res) {
+                    .end(function (err, res) {
                         res.status.should.equal(200);
                         assert.equal(false, res.body.err);
                         assert.equal(updatingCategory.name, res.body.data.name);
@@ -313,7 +312,7 @@ describe('Admin Category Controller Test', function() {
     });
 
     // post in /api/controllers/v1/CategoryController.js
-    it('should not let admin update category with missing fields', function(done) {
+    it('should not let admin update category with missing fields', function (done) {
         var updatingCategory = newCategories[0];
         updatingCategory.name = null;
 
@@ -322,7 +321,7 @@ describe('Admin Category Controller Test', function() {
             .post(apiAuth)
             .send(oldUsers[1])  // log in as admin
             .expect('Content-type', /json/)
-            .end(function(err, res) {
+            .end(function (err, res) {
                 res.status.should.equal(200);
 
                 assert.equal(true, !res.body.err);  // check if login is ok
@@ -331,7 +330,7 @@ describe('Admin Category Controller Test', function() {
                     .send(updatingCategory)
                     .expect("Content-type", /json/)
                     .expect(200)
-                    .end(function(err, res) {
+                    .end(function (err, res) {
                         res.status.should.equal(200);
                         //error = true because of missing name field
                         assert.equal(true, res.body.err);
@@ -342,13 +341,13 @@ describe('Admin Category Controller Test', function() {
     });
 
     // delete in /api/controllers/v1/CategoryController.js
-    it('should not let normal user delete category', function(done) {
+    it('should not let normal user delete category', function (done) {
         var apiAuth = testConfig.apiLogin;
         server
             .post(apiAuth)
             .send(oldUsers[0])  // log in as normal user
             .expect('Content-type', /json/)
-            .end(function(err, res) {
+            .end(function (err, res) {
                 res.status.should.equal(200);
 
                 assert.equal(true, !res.body.err);  // check if login is ok
@@ -356,7 +355,7 @@ describe('Admin Category Controller Test', function() {
                     .delete(apiURL + "/" + newCategories[0].id)
                     .expect("Content-type", /json/)
                     .expect(401)
-                    .end(function(err, res) {
+                    .end(function (err, res) {
                         res.status.should.equal(401);
                         done();
                     });
@@ -365,13 +364,13 @@ describe('Admin Category Controller Test', function() {
     });
 
     // delete in /api/controllers/v1/CategoryController.js
-    it('should let admin delete category', function(done) {
+    it('should let admin delete category', function (done) {
         var apiAuth = testConfig.apiLogin;
         server
             .post(apiAuth)
             .send(oldUsers[1])  // log in as admin
             .expect('Content-type', /json/)
-            .end(function(err, res) {
+            .end(function (err, res) {
                 res.status.should.equal(200);
 
                 assert.equal(true, !res.body.err);  // check if login is ok
@@ -379,7 +378,7 @@ describe('Admin Category Controller Test', function() {
                     .delete(apiURL + "/" + newCategories[0].id)
                     .expect("Content-type", /json/)
                     .expect(200)
-                    .end(function(err, res) {
+                    .end(function (err, res) {
                         res.status.should.equal(200);
                         assert.equal(false, res.body.err);
                         done();
@@ -388,7 +387,55 @@ describe('Admin Category Controller Test', function() {
 
     });
 
-    after(function(done) {
+    // delete in /api/controllers/v1/CategoryController.js
+    it('should not let admin delete category which has decendant', function (done) {
+        var apiAuth = testConfig.apiLogin;
+        server
+            .post(apiAuth)
+            .send(oldUsers[1])  // log in as admin
+            .expect('Content-type', /json/)
+            .end(function (err, res) {
+                res.status.should.equal(200);
+
+                assert.equal(true, !res.body.err);  // check if login is ok
+                server
+                    .delete(apiURL + "/" + newCategories[0].id)
+                    .expect("Content-type", /json/)
+                    .expect(200)
+                    .end(function (err, res) {
+                        res.status.should.equal(200);
+                        assert.equal(false, res.body.err);
+                        done();
+                    });
+            });
+
+    });
+
+    // delete in /api/controllers/v1/CategoryController.js
+    it('should not let admin delete category which has products', function (done) {
+        var apiAuth = testConfig.apiLogin;
+        server
+            .post(apiAuth)
+            .send(oldUsers[1])  // log in as admin
+            .expect('Content-type', /json/)
+            .end(function (err, res) {
+                res.status.should.equal(200);
+
+                assert.equal(true, !res.body.err);  // check if login is ok
+                server
+                    .delete(apiURL + "/" + newCategories[0].id)
+                    .expect("Content-type", /json/)
+                    .expect(200)
+                    .end(function (err, res) {
+                        res.status.should.equal(200);
+                        assert.equal(false, res.body.err);
+                        done();
+                    });
+            });
+
+    });
+
+    after(function (done) {
         done();
     });
 
