@@ -27,7 +27,7 @@ var productSchema = new mongoose.Schema({
         type: String
     },
     //product's description
-    short_description: {
+    shortDescription: {
         type: String,
         minlength: 0,
         maxlength: 256
@@ -58,12 +58,11 @@ var productSchema = new mongoose.Schema({
         }
     },
     pricing: price,
-    price_history: [
+    priceHistory: [
         price
     ],
     isActive: {
         type: Boolean,
-        required: true,
         default: true
     },
     inActiveReason: {

@@ -96,38 +96,44 @@ module.exports = function (callback) {
                     //add ancestors category
                     data.newCategories[2].ancestors.push(newCategories[0].id);
                     data.newCategories[2].ancestors.push(newCategories[1].id);
-                    
+
                     data.newCategories[1].save();
                     data.newCategories[2].save();
                     data.oldProducts = [
                         //0
                         {
-                            name: "product 01", slug: "product-01", short_description: "short", description: "des00",
+                            name: "product 01", slug: "product-01", shortDescription: "short", description: "des00",
                             pricing: { retail: 100, sale: 90, stock: 80 }, primary_category: data.newCategories[0].id,
                             createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id
                         },
                         //1
                         {
-                            name: "product 02", slug: "product-02", short_description: "short", description: "des01",
+                            name: "product 02", slug: "product-02", shortDescription: "short", description: "des01",
                             pricing: { retail: 100, sale: 90, stock: 80 }, primary_category: data.newCategories[0].id,
                             createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id
                         },
                         //2
                         {
-                            name: "product 03", slug: "product-03", short_description: "short", description: "des02",
+                            name: "product 03", slug: "product-03", shortDescription: "short", description: "des02",
+                            pricing: { retail: 100, sale: 90, stock: 80 }, primary_category: data.newCategories[0].id,
+                            createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id
+                        },
+                        //3
+                        {
+                            name: "product 04", slug: "product-04", shortDescription: "short", description: "des03",
                             pricing: { retail: 100, sale: 90, stock: 80 }, primary_category: data.newCategories[0].id,
                             createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id
                         },
                         //4
                         {
-                            name: "product 04", slug: "product-04", short_description: "short", description: "des03",
+                            name: "product 05", slug: "product-05", shortDescription: "short", description: "des04",
                             pricing: { retail: 100, sale: 90, stock: 80 }, primary_category: data.newCategories[0].id,
                             createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id
                         },
                         //5
                         {
-                            name: "product 05", slug: "product-05", short_description: "short", description: "des04",
-                            pricing: { retail: 100, sale: 90, stock: 80 }, primary_category: data.newCategories[0].id,
+                            name: "product 06", slug: "product-06", shortDescription: "short", description: "des06",
+                            pricing: { retail: 100, sale: 90, stock: 80 }, primary_category: data.newCategories[1].id,
                             createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id
                         },
                     ];

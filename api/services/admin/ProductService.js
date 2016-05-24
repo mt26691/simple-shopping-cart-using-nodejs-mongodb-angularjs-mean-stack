@@ -33,13 +33,13 @@ var self = {
                 ]
             };
         }
-
+        
         //query builder
         if (queryData.isActive != "" && queryData.isActive != null) {
             query.where('isActive').equals(queryData.isActive);
-        }
+        }   
 
-        var query = Category
+        var query = Product
             .find(realQueryData)
             .populate('createdBy', 'name');
 
@@ -66,16 +66,16 @@ var self = {
 
     //get product base on id
     'get': function (id, callback) {
-        Category
+        Product
             .findOne({ _id: id })
             //not select createdAt, updatedAt and __v fields
             .select({ createdAt: 0, updatedAt: 0, __v: 0 })
             .populate('primary_category', 'name slug')
-            .exec(function (err, foundCategory) {
+            .exec(function (err, foundProduct) {
                 if (err) {
                     return callback(err);
                 }
-                return callback(null, foundCategory);
+                return callback(null, foundProduct);
             });
     },
 
@@ -86,29 +86,48 @@ var self = {
 
         //update product
         if (product.id) {
-            Category.update({ _id: product.id }, product, function (err, saveResult) {
-                if (err) {
-                    return callback(err);
-                }
+            Product
+                .findOne({ _id: product.id })
+                .exec(function (err, foundProduct) {
+                    if (err) {
+                        return callback(err);
+                    }
+                    if (!foundProduct) {
+                        return callback(null, false, "Product not found", null);
+                    }
+                    //add pricing history
+                    if (foundProduct.pricing.retail != product.pricing.retail
+                        || foundProduct.pricing.sale != product.pricing.sale
+                        || foundProduct.pricing.stock != product.pricing.stock) {
+                        foundProduct.priceHistory.push(foundProduct.pricing);
+                    }
 
-                return callback(null, true, "Category saved", product);
-            });
+                    foundProduct = Object.assign(foundProduct, product);
+
+                    foundProduct.save(function (err, savedResult) {
+                        if (err) {
+                            return callback(err);
+                        }
+
+                        return callback(null, true, "Product saved", foundProduct);
+                    });
+                });
         }
         //create new product
         else {
-            Category.create(product, function (err, savedCategory) {
+            Product.create(product, function (err, savedProduct) {
                 if (err) {
                     return callback(err);
                 }
 
-                return callback(null, true, "Category created", savedCategory);
+                return callback(null, true, "Product created", savedProduct);
             });
         }
     },
     //delete product by its id
     'delete': function (id, callback) {
         var query = { _id: id };
-
+        //only brand new product can be deleted (no order contains product)
         Product.findOne(query, function (err, foundProduct) {
             if (err) {
                 return callback(err);

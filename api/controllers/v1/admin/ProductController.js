@@ -22,8 +22,8 @@ module.exports = {
                 res.status(500).json({ err: true, msg: "server error" });
             }
             else {
-                //data contains data (list of categories) and number of categories
-                res.status(200).json({ data: data.categories, count: data.count });
+                //data contains data (list of products) and number of products
+                res.status(200).json({ data: data.products, count: data.count });
             }
         });
     },
@@ -59,9 +59,14 @@ module.exports = {
         var item = {
             id: postData.id,
             name: postData.name,
+            sku: postData.sku,
+            shortDescription: postData.shortDescription,
             description: postData.description,
-            parent: postData.parent,
-            ancestors : postData.ancestors
+            details: postData.details,
+            pricing:postData.pricing,
+            isActive:postData.isActive,
+            inActiveReasons:postData.inActiveReasons,
+            tags: postData.tags
         };
       
         if (item.id == null) {
@@ -70,8 +75,8 @@ module.exports = {
 
         item.updatedBy = req.user.id;
         //check required field
-        if (!item.name) {
-            return res.status(200).json({ err: true, msg: "missing name" });
+        if (!item.name || !item.description || !item.shortDescription || !item.pricing) {
+            return res.status(200).json({ err: true, msg: "missing required fields" });
         }
 
         //create update product
