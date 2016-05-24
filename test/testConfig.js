@@ -14,6 +14,7 @@ module.exports = {
     apiArticleUrl: '/api/v1/admin/article',
     //article
     apiCategoryUrl: '/api/v1/admin/category',
+    apiProductUrl: '/api/v1/admin/product',
     //apiCommenttUrl
     apiCommenttUrl: '/api/v1/admin/comment',
     apiUserUrl: '/api/v1/admin/user',

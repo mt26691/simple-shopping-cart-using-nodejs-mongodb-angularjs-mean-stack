@@ -16,6 +16,7 @@ var accountRoute = require('./api/routes/accountRoutes');
 var adminUser = require("./api/routes/userRoutes");
 var adminArticle = require("./api/routes/articleRoutes");
 var adminCategory = require("./api/routes/categoryRoutes");
+var adminProduct = require("./api/routes/productRoutes");
 
 var homeApi = require("./api/routes/homeRoutes");
 var uploadImageRoutes = require("./api/routes/uploadImageRoutes");
@@ -44,6 +45,7 @@ app.use('/api/v1/account', accountRoute);
 app.use('/api/v1/admin/user', adminUser);
 app.use('/api/v1/admin/article', adminArticle);
 app.use('/api/v1/admin/category', adminCategory);
+app.use('/api/v1/admin/product', adminProduct);
 app.use('/api/v1/admin/comment', adminComment);
 
 app.use('/api/v1/admin/uploadImage', uploadImageRoutes);

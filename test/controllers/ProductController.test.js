@@ -26,7 +26,7 @@ describe('Admin Product Controller Test', function() {
     });
 
     //query method in in /api/controllers/v1/ProductController.js
-    it('should not let normal user query all products', function(done) {
+    it.only('should not let normal user query all products', function(done) {
         var apiLogin = testConfig.apiLogin;
         server
             .post(apiLogin)
@@ -213,7 +213,7 @@ describe('Admin Product Controller Test', function() {
                     .expect(200)
                     .end(function(err, res) {
                         res.status.should.equal(200);
-                        // Check returned subject
+                        // Check returned product
                         var returnedData = res.body;
 
                         assert.equal(newProducts[0].name, returnedData.name);
@@ -227,7 +227,7 @@ describe('Admin Product Controller Test', function() {
     });
 
     // post in /api/controllers/v1/ProductController.js
-    it('should not let normal user create/update subject', function(done) {
+    it('should not let normal user create/update product', function(done) {
         var updatingProduct = newProducts[0];
         updatingProduct.name = "test new name";
 
@@ -255,7 +255,7 @@ describe('Admin Product Controller Test', function() {
     });
 
     // post in /api/controllers/v1/ProductController.js
-    it('should let admin create artcile', function(done) {
+    it('should let admin create product', function(done) {
         var newlyProduct = oldProducts[0];
         newlyProduct.name = "test new product";
 
@@ -342,7 +342,7 @@ describe('Admin Product Controller Test', function() {
     });
 
     // delete in /api/controllers/v1/ProductController.js
-    it('should not let normal user delete artcile', function(done) {
+    it('should not let normal user delete product', function(done) {
         var apiAuth = testConfig.apiLogin;
         server
             .post(apiAuth)

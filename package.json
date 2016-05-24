@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node ./bin/www",
     "watch": "gulp watch",
-    "test": "mocha test/bootstrap.test.js  test/controllers/CategoryController.test.js"
+    "test": "mocha test/bootstrap.test.js  test/controllers/ProductController.test.js"
   },
   "dependencies": {
     "async": "^1.5.2",
