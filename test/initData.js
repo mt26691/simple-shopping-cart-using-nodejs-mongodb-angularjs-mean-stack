@@ -90,9 +90,9 @@ module.exports = function (callback) {
                 Category.create(data.oldCategories, function (err, newCategories) {
                     data.newCategories = newCategories;
                     //add parent category
-                    data.newCategories[1].parent_id = newCategories[0].id;
+                    data.newCategories[1].parent = newCategories[0].id;
                     data.newCategories[1].ancestors.push(newCategories[0].id);
-                    data.newCategories[2].parent_id = newCategories[1].id;
+                    data.newCategories[2].parent = newCategories[1].id;
                     //add ancestors category
                     data.newCategories[2].ancestors.push(newCategories[0].id);
                     data.newCategories[2].ancestors.push(newCategories[1].id);

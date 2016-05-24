@@ -214,12 +214,11 @@ describe('Admin Category Controller Test', function () {
                         res.status.should.equal(200);
                         // Check returned subject
                         var returnedData = res.body;
-
-                        assert.equal(newCategories[0].name, returnedData.name);
+                        
                         assert.equal(newCategories[0].id, returnedData.id);
-                        assert.equal(newCategories[0].nameUrl, returnedData.nameUrl);
+                        assert.equal(newCategories[0].name, returnedData.name);
+                        assert.equal(newCategories[0].slug, returnedData.slug);
                         assert.equal(newCategories[0].description, returnedData.description);
-                        assert.equal(newCategories[0].isActive, returnedData.isActive);
                         done();
                     });
             });
@@ -228,7 +227,7 @@ describe('Admin Category Controller Test', function () {
     // post in /api/controllers/v1/CategoryController.js
     it('should not let normal user create/update category', function (done) {
         var updatingCategory = newCategories[0];
-        updatingCategory.name = "test new name";
+        updatingCategory.name = "test new category";
 
         var apiAuth = testConfig.apiLogin;
         server
@@ -375,11 +374,12 @@ describe('Admin Category Controller Test', function () {
 
                 assert.equal(true, !res.body.err);  // check if login is ok
                 server
-                    .delete(apiURL + "/" + newCategories[0].id)
+                    .delete(apiURL + "/" + newCategories[5].id)
                     .expect("Content-type", /json/)
                     .expect(200)
                     .end(function (err, res) {
                         res.status.should.equal(200);
+                        
                         assert.equal(false, res.body.err);
                         done();
                     });
@@ -399,12 +399,13 @@ describe('Admin Category Controller Test', function () {
 
                 assert.equal(true, !res.body.err);  // check if login is ok
                 server
-                    .delete(apiURL + "/" + newCategories[0].id)
+                    .delete(apiURL + "/" + newCategories[1].id)
                     .expect("Content-type", /json/)
                     .expect(200)
                     .end(function (err, res) {
                         res.status.should.equal(200);
-                        assert.equal(false, res.body.err);
+                        
+                        assert.equal(true, res.body.err);
                         done();
                     });
             });
@@ -428,7 +429,7 @@ describe('Admin Category Controller Test', function () {
                     .expect(200)
                     .end(function (err, res) {
                         res.status.should.equal(200);
-                        assert.equal(false, res.body.err);
+                        assert.equal(true, res.body.err);
                         done();
                     });
             });

@@ -54,27 +54,24 @@ module.exports = {
     //create, update category
     'save': function(req, res) {
         var postData = req.body;
+        
         //category data
         var item = {
             id: postData.id,
             name: postData.name,
             description: postData.description,
-            isActive: postData.isActive,
-            inActiveReason: postData.inActiveReason,
-            level: postData.level,
-            duration: postData.duration,
-            image: postData.image,
-            content: postData.content
+            parent: postData.parent,
+            ancestors : postData.ancestors
         };
-        
+      
         if (item.id == null) {
             item.createdBy = req.user.id;
         }
 
         item.updatedBy = req.user.id;
         //check required field
-        if (!item.name || !item.description || item.isActive == null) {
-            return res.status(200).json({ err: true, msg: "missing some field" });
+        if (!item.name) {
+            return res.status(200).json({ err: true, msg: "missing name" });
         }
 
         //create update category

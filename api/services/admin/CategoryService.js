@@ -5,10 +5,12 @@
 
 var model = require('../../models/models')();
 var Category = model.Category;
+var Product = model.Product;
 var config = require("../../config/WebConfig");
 var helper = require("../HelperService");
 
-module.exports = {
+
+var self = {
     //query categories
     'query': function (queryData, callback) {
         var skip = 0;
@@ -40,7 +42,7 @@ module.exports = {
         //query everything except the field updatedBy and __v
         query.select({ updatedBy: 0, __v: 0 })
             .populate('createdBy', 'name')
-            .populate('parent_id', 'name slug')
+            .populate('parent', 'name slug')
             .sort({ updatedAt: 'desc' })
             .skip(skip)
             .limit(itemsPerPage)
@@ -50,6 +52,7 @@ module.exports = {
                 }
 
                 delete query.options;
+
                 query.count().exec(function (err, count) {
                     callback(null, { categories: categories, count: count });
                 });
@@ -63,7 +66,7 @@ module.exports = {
             .findOne({ _id: id })
             //not select createdAt, updatedAt and __v fields
             .select({ createdAt: 0, updatedAt: 0, __v: 0 })
-            .populate('parent_id', 'name slug')
+            .populate('parent', 'name slug')
             .populate('ancestors', 'name slug')
             .exec(function (err, foundCategory) {
                 if (err) {
@@ -77,7 +80,7 @@ module.exports = {
     'save': function (category, callback) {
         category.name = category.name.trim();
         category.slug = helper.normalizeChars(category.name);
-        
+
         //update category
         if (category.id) {
             Category.update({ _id: category.id }, category, function (err, saveResult) {
@@ -104,16 +107,49 @@ module.exports = {
         var query = { _id: id };
 
         Category.findOne(query, function (err, foundCategory) {
+            if (err) {
+                return callback(err);
+            }
+
+            if (!foundCategory) {
+                return callback(null, false, "Category not found");
+            }
+
             //check for product
-            
-            //check for descentdant
-            foundCategory
-                .remove({ _id: id }, function (err, result) {
-                    if (err) {
-                        return callback(err);
+            Product
+                .findOne({ primary_category: id })
+                .select({ id: 1 })
+                .exec(function (err, product) {
+                    
+                    if (product != null) {
+                        return callback(null, false, "There are products in this category");
                     }
-                    return callback(null, true, "Category deleted");
+
+                    //check for descentdants
+                    self.findParentCategory(id, function (parentCategory) {
+                        if (parentCategory) {
+                            return callback(null, false, "This category has decendants");
+                        }
+
+                        foundCategory
+                            .remove({ _id: id }, function (err, result) {
+                                if (err) {
+                                    return callback(err);
+                                }
+                                return callback(null, true, "Category deleted");
+                            });
+                    });
                 });
         });
     },
+    'findParentCategory': function (currentCategoryId, callback) {
+        Category
+            .findOne({ parent: currentCategoryId })
+            .select({ name: 1, slug: 1 })
+            .exec(function (err, foundCategory) {
+                callback(foundCategory);
+            });
+    }
 };
+
+module.exports = self;
