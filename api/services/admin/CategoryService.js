@@ -40,6 +40,7 @@ module.exports = {
         //query everything except the field updatedBy and __v
         query.select({ updatedBy: 0, __v: 0 })
             .populate('createdBy', 'name')
+            .populate('parent_id', 'name slug')
             .sort({ updatedAt: 'desc' })
             .skip(skip)
             .limit(itemsPerPage)
@@ -49,7 +50,6 @@ module.exports = {
                 }
 
                 delete query.options;
-
                 query.count().exec(function (err, count) {
                     callback(null, { categories: categories, count: count });
                 });

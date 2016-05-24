@@ -99,7 +99,7 @@ describe('Admin Category Controller Test', function () {
                         assert.equal(true, returnedData.length <= testConfig.itemsPerPage);
                         //becase we have 6 record in database (initData.js)
                         //page size = 5, so the number of database in page 2 must be 1
-                        assert.equal(3, returnedData.length);
+                        assert.equal(1, returnedData.length);
                         done();
                     });
 
@@ -107,8 +107,8 @@ describe('Admin Category Controller Test', function () {
 
     });
 
-    //query method in /api/controllers/v1/CategoryController.js with keyword = category 06
-    it('should let admin query categories which name contains category 06', function (done) {
+    //query method in /api/controllers/v1/CategoryController.js with keyword = category 03
+    it('should let admin query categories which name contains category 03', function (done) {
         var apiAuth = testConfig.apiLogin;
         server
             .post(apiAuth)
@@ -119,7 +119,7 @@ describe('Admin Category Controller Test', function () {
 
                 assert.equal(true, !res.body.err);  // check if login is ok
                 //query with keyword = category 06
-                var queryUrl = apiURL + "?keyword=category 06";
+                var queryUrl = apiURL + "?keyword=category 03";
                 server
                     .get(queryUrl)  // query category
                     .expect('Content-type', /json/)
@@ -163,11 +163,11 @@ describe('Admin Category Controller Test', function () {
                         var returnedData = res.body.data;
                         var total = res.body.count;
                         //all categories in database have name contains category
-                        assert.equal(newCategories.length, total)
+                        assert.equal(3, total)
                         assert.equal(true, returnedData.length <= testConfig.itemsPerPage);
                         //because we query data in page 2, page size = 5 so the return data must
                         //contain only one category
-                        assert.equal(3, returnedData.length);
+                        assert.equal(0, returnedData.length);
                         done();
                     });
             });

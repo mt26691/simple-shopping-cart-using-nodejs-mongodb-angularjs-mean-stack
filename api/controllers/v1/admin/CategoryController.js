@@ -22,8 +22,8 @@ module.exports = {
                 res.status(500).json({ err: true, msg: "server error" });
             }
             else {
-                //data contains data (list of categorys) and number of categorys
-                res.status(200).json({ data: data.categorys, count: data.count });
+                //data contains data (list of categories) and number of categories
+                res.status(200).json({ data: data.categories, count: data.count });
             }
         });
     },
