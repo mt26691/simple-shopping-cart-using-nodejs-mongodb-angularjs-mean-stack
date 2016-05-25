@@ -17,7 +17,9 @@ var adminUser = require("./api/routes/userRoutes");
 var adminArticle = require("./api/routes/articleRoutes");
 var adminCategory = require("./api/routes/categoryRoutes");
 var adminProduct = require("./api/routes/productRoutes");
+var adminOrder = require("./api/routes/orderRoutes");
 
+var customerOrder = require("./api/routes/customerOrderRoutes");
 var homeApi = require("./api/routes/homeRoutes");
 var uploadImageRoutes = require("./api/routes/uploadImageRoutes");
 var adminComment = require("./api/routes/commentRoutes");
@@ -47,9 +49,11 @@ app.use('/api/v1/admin/article', adminArticle);
 app.use('/api/v1/admin/category', adminCategory);
 app.use('/api/v1/admin/product', adminProduct);
 app.use('/api/v1/admin/comment', adminComment);
+app.use('/api/v1/admin/order', adminOrder);
 
 app.use('/api/v1/admin/uploadImage', uploadImageRoutes);
 app.use('/api/v1/home', homeApi);
+app.use('/api/v1/order', customerOrder);
 
 app.use('/', routes);
 // catch 404 and forward to error handler

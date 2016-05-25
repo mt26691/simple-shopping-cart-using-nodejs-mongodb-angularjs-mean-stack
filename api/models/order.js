@@ -10,18 +10,18 @@ var orderSchema = new mongoose.Schema({
         type: String,
         enum: ['cart', 'checkout', 'ordered', 'shipping', 'shipped', 'paid', 'cancel'],
     },
-    line_items: [
+    lineItems: [
         {
             product_id: { type: Schema.Types.ObjectId, ref: 'Product' },
             quantity: { type: Number, min: 0 },
             pricing: { type: Number, min: 0 },
         }
     ],
-    shipping_address: {
+    shippingAddress: {
         street: { type: String, minlength: 2, maxlength: 256 },
         city: { type: String, minlength: 2, maxlength: 256 },
     },
-    sub_total: {
+    subTotal: {
         type: Number,
         min: 0
     },
