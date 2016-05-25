@@ -12,7 +12,7 @@ var orderSchema = new mongoose.Schema({
     },
     lineItems: [
         {
-            product_id: { type: Schema.Types.ObjectId, ref: 'Product' },
+            product: { type: Schema.Types.ObjectId, ref: 'Product' },
             quantity: { type: Number, min: 0 },
             pricing: { type: Number, min: 0 },
         }
@@ -20,7 +20,9 @@ var orderSchema = new mongoose.Schema({
     shippingAddress: {
         street: { type: String, minlength: 2, maxlength: 256 },
         city: { type: String, minlength: 2, maxlength: 256 },
+        receiver: { type: String, minlength: 2, maxlength: 256 },
     },
+    
     subTotal: {
         type: Number,
         min: 0

@@ -8,7 +8,7 @@ var Category = model.Category;
 var Product = model.Product;
 var config = require("../../config/WebConfig");
 var helper = require("../HelperService");
-
+var _ = require("lodash");
 
 var self = {
     //query products
@@ -33,11 +33,11 @@ var self = {
                 ]
             };
         }
-        
+
         //query builder
         if (queryData.isActive != "" && queryData.isActive != null) {
             query.where('isActive').equals(queryData.isActive);
-        }   
+        }
 
         var query = Product
             .find(realQueryData)
@@ -145,6 +145,44 @@ var self = {
                     return callback(null, true, "Product deleted");
                 });
         });
+    },
+    'calculatePrice': function (productList, callback) {
+        /*
+        productList : [{
+              productId:ObjectId,
+              quantity:Number
+        }];
+        */
+        var returnProductList = [];
+        var subTotal = 0;
+        var productIdList = _.map(productList, "id");
+
+        Product
+            .find({ _id: { $in: productIdList } })
+            .select({ name: 1, slug: 1, pricing: 1 })
+            .exec(function (err, foundProducts) {
+                foundProducts.forEach(function (product) {
+                    var quantity = _(productList)
+                        .filter(c => c.id == product.id)
+                        .map(c => c.quantity)
+                        .value()[0];
+                    
+                    //return product
+                    var returnProduct = {
+                        product: product._id,
+                        quantity: quantity,
+                        pricing: product.pricing.retail
+                    }
+
+                    //if product is on sale, we use sale price to calculate price
+                    if (product.pricing.sale && product.pricing.sale > 0) {
+                        returnProduct.pricing = product.pricing.sale;
+                    }
+                    subTotal += returnProduct.pricing * quantity;
+                    returnProductList.push(returnProduct);
+                });
+                callback(returnProductList, subTotal);
+            });
     }
 };
 

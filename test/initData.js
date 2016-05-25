@@ -103,7 +103,7 @@ module.exports = function (callback) {
                         //0
                         {
                             name: "product 01", slug: "product-01", shortDescription: "short", description: "des00",
-                            pricing: { retail: 100, sale: 90, stock: 80 }, primary_category: data.newCategories[0].id,
+                            pricing: { retail: 100, sale: 0, stock: 80 }, primary_category: data.newCategories[0].id,
                             createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id
                         },
                         //1
@@ -115,7 +115,7 @@ module.exports = function (callback) {
                         //2
                         {
                             name: "product 03", slug: "product-03", shortDescription: "short", description: "des02",
-                            pricing: { retail: 100, sale: 90, stock: 80 }, primary_category: data.newCategories[0].id,
+                            pricing: { retail: 100, sale: 80, stock: 80 }, primary_category: data.newCategories[0].id,
                             createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id
                         },
                         //3
@@ -140,7 +140,132 @@ module.exports = function (callback) {
 
                     Product.create(data.oldProducts, function (err, newProducts) {
                         data.newProducts = newProducts;
-                        callback(data);
+
+                        data.oldOrders = [
+                            //0
+                            {
+                                state: "cart",
+                                lineItems: [
+                                    {
+                                        product: data.newProducts[0].id,
+                                        quantity: 1,
+                                        pricing: data.newProducts[0].retail
+                                    }
+                                ],
+                                createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id
+                            },
+                            //1
+                            {
+                                state: "checkout", shippingAddress: { street: "Le Duan", city: "Da Nang", receiver: "Nguyen Manh Tung" },
+                                lineItems: [
+                                    {
+                                        product: data.newProducts[0].id,
+                                        quantity: 1,
+                                        pricing: data.newProducts[0].sale
+                                    },
+                                    {
+                                        product: data.newProducts[1].id,
+                                        quantity: 1,
+                                        pricing: data.newProducts[1].sale
+                                    }
+
+                                ],
+                                createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id
+                            },
+                            //2
+                            {
+                                state: "ordered", shippingAddress: { street: "Le Duan", city: "Da Nang", receiver: "Nguyen Manh Tung" },
+                                lineItems: [
+                                    {
+                                        product: data.newProducts[0].id,
+                                        quantity: 1,
+                                        pricing: data.newProducts[0].sale
+                                    }
+
+                                ],
+                                subTotal: 12345,
+                                createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id
+                            },
+                            //3
+                            {
+                                state: "shipping", shippingAddress: { street: "Le Duan", city: "Da Nang", receiver: "Nguyen Manh Tung" },
+                                lineItems: [
+                                    {
+                                        product: data.newProducts[0].id,
+                                        quantity: 1,
+                                        pricing: data.newProducts[0].sale
+                                    },
+                                    {
+                                        product: data.newProducts[2].id,
+                                        quantity: 5,
+                                        pricing: data.newProducts[2].sale
+                                    }
+                                ],
+                                subTotal: 123455,
+                                createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id
+                            },
+                            //4
+                            {
+                                state: "shipping", shippingAddress: { street: "Le Duan", city: "Da Nang", receiver: "Nguyen Manh Tung" },
+                                lineItems: [
+                                    {
+                                        product: data.newProducts[0].id,
+                                        quantity: 1,
+                                        pricing: data.newProducts[0].sale
+                                    },
+                                    {
+                                        product: data.newProducts[2].id,
+                                        quantity: 5,
+                                        pricing: data.newProducts[2].sale
+                                    }
+                                ],
+                                subTotal: 123455,
+                                createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id
+                            },
+                            //5
+                            {
+                                state: "shipping", shippingAddress: { street: "Le Duan", city: "Da Nang", receiver: "Nguyen Manh Tung" },
+                                lineItems: [
+                                    {
+                                        product: data.newProducts[0].id,
+                                        quantity: 1,
+                                        pricing: data.newProducts[0].sale
+                                    },
+                                    {
+                                        product: data.newProducts[2].id,
+                                        quantity: 5,
+                                        pricing: data.newProducts[2].sale
+                                    }
+                                ],
+                                subTotal: 123455,
+                                createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id
+                            },
+                            //6
+                            {
+                                state: "shipping", shippingAddress: { street: "Le Duan", city: "Da Nang", receiver: "Nguyen Manh Tung" },
+                                lineItems: [
+                                    {
+                                        product: data.newProducts[0].id,
+                                        quantity: 1,
+                                        pricing: data.newProducts[0].sale
+                                    },
+                                    {
+                                        product: data.newProducts[2].id,
+                                        quantity: 5,
+                                        pricing: data.newProducts[2].sale
+                                    }
+                                ],
+                                subTotal: 123455,
+                                createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id
+                            },
+                        ];
+
+                        Order.create(data.oldOrders, function (err, newOrders) {
+
+                            data.newOrders = newOrders;
+                            callback(data);
+                        });
+
                     });
 
                 })

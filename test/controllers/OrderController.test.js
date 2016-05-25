@@ -14,13 +14,15 @@ describe('Admin Order Controller Test', function () {
     var oldUsers = [];
     var newOrders = [];
     var oldOrders = [];
-
+    var newProducts = [];
     beforeEach(function (done) {
         initData(function (returnData) {
             newUsers = returnData.newUsers;
             oldUsers = returnData.oldUsers;
             newOrders = returnData.newOrders;
             oldOrders = returnData.oldOrders;
+            newProducts = returnData.newProducts;
+
             done();
         });
     });
@@ -98,9 +100,9 @@ describe('Admin Order Controller Test', function () {
                         var total = res.body.count;
                         assert.equal(newOrders.length, total)
                         assert.equal(true, returnedData.length <= testConfig.itemsPerPage);
-                        //becase we have 6 record in database (initData.js)
-                        //page size = 5, so the number of database in page 2 must be 1
-                        assert.equal(1, returnedData.length);
+                        //becase we have 7 record in database (initData.js)
+                        //page size = 5, so the number of database in page 2 must be 2
+                        assert.equal(2, returnedData.length);
                         done();
                     });
 
@@ -108,8 +110,8 @@ describe('Admin Order Controller Test', function () {
 
     });
 
-    //query method in /api/controllers/v1/OrderController.js with keyword = order 06
-    it('should let admin query orders which name contains order 06', function (done) {
+    //query method in /api/controllers/v1/OrderController.js with keyword = Nguyen
+    it('should let admin query orders which receiver name contains Nguyen', function (done) {
 
         server
             .post(testConfig.apiLogin)
@@ -119,8 +121,8 @@ describe('Admin Order Controller Test', function () {
                 res.status.should.equal(200);
 
                 assert.equal(true, !res.body.err);  // check if login is ok
-                //query with keyword = order 06
-                var queryUrl = apiURL + "?keyword=order 06";
+                //query with keyword = Nguyen
+                var queryUrl = apiURL + "?keyword=Nguyen";
                 server
                     .get(queryUrl)  // query order
                     .expect('Content-type', /json/)
@@ -132,9 +134,9 @@ describe('Admin Order Controller Test', function () {
                         var total = res.body.count;
 
                         //only one order is returned
-                        assert.equal(1, total)
+                        assert.equal(6, total)
                         assert.equal(true, returnedData.length <= testConfig.itemsPerPage);
-                        assert.equal(1, returnedData.length);
+                        assert.equal(5, returnedData.length);
 
                         done();
                     });
@@ -143,8 +145,8 @@ describe('Admin Order Controller Test', function () {
 
     });
 
-    //query method in /api/controllers/v1/OrderController.js with keyword = order, page = 2
-    it('should let admin query user which name contains order in page 2', function (done) {
+    //query method in /api/controllers/v1/OrderController.js with keyword = Nguyen, page = 2
+    it('should let admin query user which name contains Nguyen in page 2', function (done) {
 
         server
             .post(testConfig.apiLogin)
@@ -154,7 +156,7 @@ describe('Admin Order Controller Test', function () {
                 res.status.should.equal(200);
 
                 assert.equal(true, !res.body.err);  // check if login is ok
-                var queryUrl = apiURL + "?keyword=order&page=2";
+                var queryUrl = apiURL + "?keyword=Nguyen&page=2";
                 server
                     .get(queryUrl)  // query orders
                     .expect('Content-type', /json/)
@@ -165,7 +167,7 @@ describe('Admin Order Controller Test', function () {
                         var returnedData = res.body.data;
                         var total = res.body.count;
                         //all orders in database have name contains order
-                        assert.equal(newOrders.length, total)
+                        assert.equal(6, total)
                         assert.equal(true, returnedData.length <= testConfig.itemsPerPage);
                         //because we query data in page 2, page size = 5 so the return data must
                         //contain 1 orders
@@ -185,6 +187,7 @@ describe('Admin Order Controller Test', function () {
             .expect(200)
             .end(function (err, res) {
                 res.status.should.equal(200); // OK
+
                 server
                     .get(apiURL + "/" + newOrders[0].id)
                     .expect('Content-type', /json/)
@@ -214,12 +217,7 @@ describe('Admin Order Controller Test', function () {
                         res.status.should.equal(200);
                         // Check returned order
                         var returnedData = res.body;
-
-                        assert.equal(newOrders[0].name, returnedData.name);
                         assert.equal(newOrders[0].id, returnedData.id);
-                        assert.equal(newOrders[0].slug, returnedData.slug);
-                        assert.equal(newOrders[0].description, returnedData.description);
-                        assert.equal(newOrders[0].isActive, returnedData.isActive);
                         done();
                     });
             });
@@ -253,9 +251,14 @@ describe('Admin Order Controller Test', function () {
     });
 
     // post in /api/controllers/v1/OrderController.js
-    it('should let admin create order', function (done) {
-        var newlyOrder = oldOrders[0];
-        newlyOrder.name = "test new order";
+    it.only('should let admin create order', function (done) {
+        var newlyOrder = oldOrders[1];
+        newlyOrder.shippingAddress = { street: "Newly Order", city: "Newly Order", receiver: "Newly Order" };
+        newlyOrder.products = [
+            { id: newProducts[0].id, quantity: 1 },
+            { id: newProducts[2].id, quantity: 2 },
+            { id: newProducts[3].id, quantity: 3 }
+        ];
 
         server
             .post(testConfig.apiLogin)
@@ -271,9 +274,10 @@ describe('Admin Order Controller Test', function () {
                     .expect("Content-type", /json/)
                     .expect(200)
                     .end(function (err, res) {
+                        console.log(res.body.data);
                         res.status.should.equal(200);
                         assert.equal(false, res.body.err);
-                        assert.equal(newlyOrder.name, res.body.data.name);
+
                         assert.equal(true, res.body.data.id.length > 0);
                         done();
                     });
@@ -301,7 +305,7 @@ describe('Admin Order Controller Test', function () {
                     .expect("Content-type", /json/)
                     .expect(200)
                     .end(function (err, res) {
-                       
+
                         res.status.should.equal(200);
                         assert.equal(false, res.body.err);
                         assert.equal(updatingOrder.name, res.body.data.name);
@@ -384,8 +388,8 @@ describe('Admin Order Controller Test', function () {
             });
 
     });
-    
-        // delete in /api/controllers/v1/OrderController.js
+
+    // delete in /api/controllers/v1/OrderController.js
     it('should let not admin delete old order (some orders contain this order)', function (done) {
         server
             .post(testConfig.apiLogin)

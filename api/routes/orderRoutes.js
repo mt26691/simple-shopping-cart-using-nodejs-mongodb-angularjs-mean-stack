@@ -1,19 +1,19 @@
 /**
-* Article Routes
+* Order Routes
 *
-* @module      :: Article Routes
-* @description	:: perform request that related to article management module
+* @module      :: Order Routes
+* @description	:: perform request that related to order management module
 */
 var express = require('express');
 var router = express.Router();
-var articleController = require("../controllers/v1/admin/ArticleController");
+var orderController = require("../controllers/v1/admin/OrderController");
 var checkIn = require("../policies/checkin");
 var isAdmin = require("../policies/isAdmin");
 
-//CRUD article, you must check current logged user is admin or not first
-router.get('/', [checkIn, isAdmin, articleController.query]);
-router.get('/:id', [checkIn, isAdmin, articleController.get]);
-router.post('/', [checkIn, isAdmin, articleController.post]);
-router.delete('/:id', [checkIn , isAdmin, articleController.delete]);
+//CRUD order, you must check current logged user is admin or not first
+router.get('/', [checkIn, isAdmin, orderController.query]);
+router.get('/:id', [checkIn, isAdmin, orderController.get]);
+router.post('/', [checkIn, isAdmin, orderController.save]);
+// router.delete('/:id', [checkIn , isAdmin, orderController.delete]);
 
 module.exports = router;
