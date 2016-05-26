@@ -60,7 +60,7 @@ module.exports = {
             id: postData.id,
             state: postData.state,
             shippingAddress: postData.shippingAddress,
-            lineItems : postData.lineItems
+            lineItems: postData.lineItems
         };
 
         if (item.id == null) {
@@ -87,7 +87,20 @@ module.exports = {
         });
 
     },
-
+    'updateLineItems': function (req, res) {
+        var orderId = req.body.id;
+        
+        orderService.updateLineItemsManually(orderId, function (err, result, msg, data) {
+            if (err) {
+                return res.status(500).json({ err: true, msg: "Server error in updateLineItems" });
+            }
+            if (!result) {
+                return res.status(200).json({ err: true, msg: msg });
+            }
+            
+            return res.status(200).json({ err: !result, msg: msg, data: data });
+        });
+    },
     //delete order
     'delete': function (req, res) {
         var id = req.params.id;

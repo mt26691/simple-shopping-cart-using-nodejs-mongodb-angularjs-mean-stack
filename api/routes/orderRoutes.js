@@ -14,6 +14,8 @@ var isAdmin = require("../policies/isAdmin");
 router.get('/', [checkIn, isAdmin, orderController.query]);
 router.get('/:id', [checkIn, isAdmin, orderController.get]);
 router.post('/', [checkIn, isAdmin, orderController.save]);
+router.post('/updateLineItems', [checkIn, isAdmin, orderController.updateLineItems]);
+
 router.delete('/:id', [checkIn , isAdmin, orderController.delete]);
 
 module.exports = router;

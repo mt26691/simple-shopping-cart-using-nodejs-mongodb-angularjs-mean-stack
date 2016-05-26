@@ -64,7 +64,6 @@ var self = {
             });
     },
 
-
     //get order base on id
     'get': function (id, callback) {
         Order
@@ -167,8 +166,27 @@ var self = {
 
                 callback(returnProductList, subTotal);
             });
-    }
-    ,
+    },
+    updateLineItemsManually: function (orderId, callback) {
+        Order
+            .findOne({ _id: orderId })
+            .select({ createdAt: 0, updatedAt: 0, __v: 0 , shippingAddress:0})
+            .exec(function (err, foundOrder) {
+                if (err) {
+                    return callback(err);
+                }
+                if (!foundOrder) {
+                    return callback(null, false, "Order not found");
+                }
+               
+                self.updateLineItems(foundOrder.lineItems, function (returnProductList, subTotal) {
+                    foundOrder.lineItems = returnProductList;
+                    foundOrder.subTotal = subTotal;
+                    foundOrder.save();
+                    return callback(null, true, "Order saved", foundOrder);
+                });
+            });
+    },
     //delete order by its id
     'delete': function (id, callback) {
         var query = { _id: id };

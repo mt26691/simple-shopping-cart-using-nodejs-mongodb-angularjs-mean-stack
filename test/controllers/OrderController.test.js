@@ -360,6 +360,34 @@ describe('Admin Order Controller Test', function () {
 
 
     // post in /api/controllers/v1/OrderController.js
+    it('should let admin update order line items manually', function (done) {
+        var updatingOrder = newOrders[0].toObject();
+
+        server
+            .post(testConfig.apiLogin)
+            .send(oldUsers[1])  // log in as admin
+            .expect('Content-type', /json/)
+            .end(function (err, res) {
+                res.status.should.equal(200);
+
+                assert.equal(true, !res.body.err);  // check if login is ok
+                server
+                    .post(apiURL + "/updateLineItems")
+                    .send(updatingOrder)
+                    .expect("Content-type", /json/)
+                    .expect(200)
+                    .end(function (err, res) {
+                        res.status.should.equal(200);
+
+                        var returnedOrder = res.body.data;
+                        assert.equal(true, returnedOrder.subTotal > 0);
+                        assert.equal(false, res.body.err);
+                        done();
+                    });
+            });
+    });
+
+    // post in /api/controllers/v1/OrderController.js
     it('should not let admin update user with missing fields', function (done) {
         var updatingOrder = newOrders[0].toObject();
         updatingOrder.shippingAddress = { street: "update Order", city: "update Order", receiver: "update Order" };
@@ -434,7 +462,7 @@ describe('Admin Order Controller Test', function () {
     });
 
     // delete in /api/controllers/v1/OrderController.js
-    it('should not let admin delete order with state != cart or cancel'  , function (done) {
+    it('should not let admin delete order with state != cart or cancel', function (done) {
         server
             .post(testConfig.apiLogin)
             .send(oldUsers[1])  // log in as admin
