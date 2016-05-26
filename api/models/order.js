@@ -8,7 +8,7 @@ var product = require("./product");
 var orderSchema = new mongoose.Schema({
     state: {
         type: String,
-        enum: ['cart', 'checkout', 'ordered', 'shipping', 'shipped', 'paid', 'cancel'],
+        enum: ['cart', 'checkout', 'ordered', 'processing', 'processed', 'shipping', 'shipped', 'paid', 'cancel'],
     },
     lineItems: [
         {
@@ -22,7 +22,7 @@ var orderSchema = new mongoose.Schema({
         city: { type: String, minlength: 2, maxlength: 256 },
         receiver: { type: String, minlength: 2, maxlength: 256 },
     },
-    
+
     subTotal: {
         type: Number,
         min: 0

@@ -251,13 +251,13 @@ describe('Admin Order Controller Test', function () {
     });
 
     // post in /api/controllers/v1/OrderController.js
-    it.only('should let admin create order', function (done) {
+    it('should let admin create order', function (done) {
         var newlyOrder = oldOrders[1];
         newlyOrder.shippingAddress = { street: "Newly Order", city: "Newly Order", receiver: "Newly Order" };
-        newlyOrder.products = [
-            { id: newProducts[0].id, quantity: 1 },
-            { id: newProducts[2].id, quantity: 2 },
-            { id: newProducts[3].id, quantity: 3 }
+        newlyOrder.lineItems = [
+            { product: newProducts[0].id, quantity: 1 },
+            { product: newProducts[2].id, quantity: 2 },
+            { product: newProducts[3].id, quantity: 3 }
         ];
 
         server
@@ -274,10 +274,10 @@ describe('Admin Order Controller Test', function () {
                     .expect("Content-type", /json/)
                     .expect(200)
                     .end(function (err, res) {
-                        console.log(res.body.data);
+
                         res.status.should.equal(200);
                         assert.equal(false, res.body.err);
-
+                        assert.equal(3, res.body.data.lineItems.length);
                         assert.equal(true, res.body.data.id.length > 0);
                         done();
                     });
@@ -286,11 +286,17 @@ describe('Admin Order Controller Test', function () {
     });
 
     // post in /api/controllers/v1/OrderController.js
-    it('should let admin update order', function (done) {
-        var updatingOrder = newOrders[0];
-        updatingOrder.name = "test new order";
-        //change order pricing
-        updatingOrder.pricing = { retail: 99, sale: 80, stock: 30 };
+    it('should let admin update order, line items is update when state = cart or checkout only', function (done) {
+        var updatingOrder = newOrders[0].toObject();
+        updatingOrder.shippingAddress = { street: "update Order", city: "update Order", receiver: "update Order" };
+        updatingOrder.state = "cart";
+
+        updatingOrder.lineItems = [
+            { product: newProducts[0].id, quantity: 4 },
+            { product: newProducts[2].id, quantity: 5 },
+            { product: newProducts[3].id, quantity: 6 }
+        ];
+
         server
             .post(testConfig.apiLogin)
             .send(oldUsers[1])  // log in as admin
@@ -305,11 +311,11 @@ describe('Admin Order Controller Test', function () {
                     .expect("Content-type", /json/)
                     .expect(200)
                     .end(function (err, res) {
-
                         res.status.should.equal(200);
+
+                        var returnedOrder = res.body.data;
+                        assert.equal(updatingOrder.lineItems.length, returnedOrder.lineItems.length);
                         assert.equal(false, res.body.err);
-                        assert.equal(updatingOrder.name, res.body.data.name);
-                        assert.equal(1, res.body.data.priceHistory.length)
                         done();
                     });
             });
@@ -317,9 +323,16 @@ describe('Admin Order Controller Test', function () {
     });
 
     // post in /api/controllers/v1/OrderController.js
-    it('should not let admin update user with missing fields', function (done) {
-        var updatingOrder = newOrders[0];
-        updatingOrder.name = null;
+    it('should let admin update order, line items is not update when state != cart or checkout', function (done) {
+        var updatingOrder = newOrders[0].toObject();
+        updatingOrder.shippingAddress = { street: "update Order", city: "update Order", receiver: "update Order" };
+        updatingOrder.state = "ordered";
+
+        updatingOrder.lineItems = [
+            { product: newProducts[0].id, quantity: 4 },
+            { product: newProducts[2].id, quantity: 5 },
+            { product: newProducts[3].id, quantity: 6 }
+        ];
 
         server
             .post(testConfig.apiLogin)
@@ -336,12 +349,43 @@ describe('Admin Order Controller Test', function () {
                     .expect(200)
                     .end(function (err, res) {
                         res.status.should.equal(200);
+
+                        var returnedOrder = res.body.data;
+                        assert.equal(true, updatingOrder.lineItems.length != returnedOrder.lineItems.length);
+                        assert.equal(false, res.body.err);
+                        done();
+                    });
+            });
+    });
+
+
+    // post in /api/controllers/v1/OrderController.js
+    it('should not let admin update user with missing fields', function (done) {
+        var updatingOrder = newOrders[0].toObject();
+        updatingOrder.shippingAddress = { street: "update Order", city: "update Order", receiver: "update Order" };
+        updatingOrder.state = null;
+
+        server
+            .post(testConfig.apiLogin)
+            .send(oldUsers[1])  // log in as admin
+            .expect('Content-type', /json/)
+            .end(function (err, res) {
+                res.status.should.equal(200);
+
+                assert.equal(true, !res.body.err);  // check if login is ok
+                server
+                    .post(apiURL)
+                    .send(updatingOrder)
+                    .expect("Content-type", /json/)
+                    .expect(200)
+                    .end(function (err, res) {
+                        res.status.should.equal(200);
+
                         //error = true because of missing name field
                         assert.equal(true, res.body.err);
                         done();
                     });
             });
-
     });
 
     // delete in /api/controllers/v1/OrderController.js
@@ -367,7 +411,7 @@ describe('Admin Order Controller Test', function () {
     });
 
     // delete in /api/controllers/v1/OrderController.js
-    it('should let admin delete brand new order (no order contains this order)', function (done) {
+    it('should let admin delete order with state = cart or cancel', function (done) {
         server
             .post(testConfig.apiLogin)
             .send(oldUsers[1])  // log in as admin
@@ -390,7 +434,7 @@ describe('Admin Order Controller Test', function () {
     });
 
     // delete in /api/controllers/v1/OrderController.js
-    it('should let not admin delete old order (some orders contain this order)', function (done) {
+    it('should not let admin delete order with state != cart or cancel'  , function (done) {
         server
             .post(testConfig.apiLogin)
             .send(oldUsers[1])  // log in as admin
@@ -400,12 +444,12 @@ describe('Admin Order Controller Test', function () {
 
                 assert.equal(true, !res.body.err);  // check if login is ok
                 server
-                    .delete(apiURL + "/" + newOrders[0].id)
+                    .delete(apiURL + "/" + newOrders[1].id)
                     .expect("Content-type", /json/)
                     .expect(200)
                     .end(function (err, res) {
                         res.status.should.equal(200);
-                        assert.equal(false, res.body.err);
+                        assert.equal(true, res.body.err);
                         done();
                     });
             });

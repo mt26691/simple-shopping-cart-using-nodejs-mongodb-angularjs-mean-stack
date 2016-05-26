@@ -60,6 +60,7 @@ module.exports = {
             id: postData.id,
             state: postData.state,
             shippingAddress: postData.shippingAddress,
+            lineItems : postData.lineItems
         };
 
         if (item.id == null) {
@@ -67,14 +68,14 @@ module.exports = {
         }
 
         item.updatedBy = req.user.id;
-       
+
         //check required field
         if (!item.state) {
             return res.status(200).json({ err: true, msg: "missing order state" });
         }
 
         //create update order
-        orderService.save(item, postData.products, function (err, result, msg, data) {
+        orderService.save(item, function (err, result, msg, data) {
             if (err) {
                 //return error back to client
                 return res.status(500).json({ err: true, msg: "Server error in OrderController/save" });

@@ -9,6 +9,7 @@ var Product = model.Product;
 var config = require("../../config/WebConfig");
 var helper = require("../HelperService");
 var productService = require("./productService");
+var _ = require("lodash");
 
 var self = {
     //query orders
@@ -80,9 +81,9 @@ var self = {
     },
 
     //create, update order
-    'save': function (order, productList, callback) {
-        productService.calculatePrice(productList, function (returnProductList, subTotal) {
-            //update order
+    'save': function (order, callback) {
+        //update order
+        self.updateLineItems(order.lineItems, function (returnProductList, subTotal) {
             if (order.id) {
                 Order
                     .findOne({ _id: order.id })
@@ -93,30 +94,29 @@ var self = {
                         if (!foundOrder) {
                             return callback(null, false, "Order not found", null);
                         }
-                        //add pricing history
-                        if (foundOrder.pricing.retail != order.pricing.retail
-                            || foundOrder.pricing.sale != order.pricing.sale
-                            || foundOrder.pricing.stock != order.pricing.stock) {
-                            foundOrder.priceHistory.push(foundOrder.pricing);
-                        }
 
-                        foundOrder = Object.assign(foundOrder, order);
+                        foundOrder.state = order.state;
+                        foundOrder.shippingAddress = order.shippingAddress;
+                        //only update line items when order state == cart or checkout
 
-                        foundOrder.save(function (err, savedResult) {
-                            if (err) {
-                                return callback(err);
-                            }
-
+                        if (order.state == "cart" || order.state == "checkout") {
+                            foundOrder.lineItems = returnProductList;
+                            foundOrder.subTotal = subTotal;
+                            foundOrder.save();
                             return callback(null, true, "Order saved", foundOrder);
-                        });
+                        }
+                        else {
+                            foundOrder.save();
+                            return callback(null, true, "Order saved", foundOrder);
+                        }
                     });
             }
             //create new order
             else {
+                //update line items
                 order.lineItems = returnProductList;
                 order.subTotal = subTotal;
-                console.log(order);
-                
+
                 Order.create(order, function (err, savedOrder) {
                     if (err) {
                         return callback(err);
@@ -124,9 +124,51 @@ var self = {
 
                     return callback(null, true, "Order created", savedOrder);
                 });
+
             }
         });
     },
+    updateLineItems: function (productList, callback) {
+        /*
+            productList : [{
+            productId:ObjectId,
+            quantity:Number
+            }];
+        */
+
+        var returnProductList = [];
+        var subTotal = 0;
+        var productIdList = _.map(productList, "product");
+
+        Product
+            .find({ _id: { $in: productIdList } })
+            .select({ name: 1, slug: 1, pricing: 1 })
+            .exec(function (err, foundProducts) {
+                foundProducts.forEach(function (currentProduct) {
+                    var quantity = _(productList)
+                        .filter(c => c.product == currentProduct.id)
+                        .map(c => c.quantity)
+                        .value()[0];
+
+                    //return product
+                    var returnProduct = {
+                        product: currentProduct.id,
+                        quantity: quantity,
+                        pricing: currentProduct.pricing.retail
+                    }
+
+                    //if product is on sale, we use sale price to calculate price
+                    if (currentProduct.pricing.currentProduct && product.pricing.sale > 0) {
+                        returnProduct.pricing = currentProduct.pricing.sale;
+                    }
+                    subTotal += returnProduct.pricing * quantity;
+                    returnProductList.push(returnProduct);
+                });
+
+                callback(returnProductList, subTotal);
+            });
+    }
+    ,
     //delete order by its id
     'delete': function (id, callback) {
         var query = { _id: id };
@@ -139,14 +181,20 @@ var self = {
             if (!foundOrder) {
                 return callback(null, false, "Order not found");
             }
+            //we can delete order state = cart or cancel only
+            if (foundOrder.state == "cart" || foundOrder.state == "cancel") {
+                foundOrder
+                    .remove({ _id: id }, function (err, result) {
+                        if (err) {
+                            return callback(err);
+                        }
+                        return callback(null, true, "Order deleted");
+                    });
+            }
+            else {
+                return callback(null, false, "Can not delete this order");
+            }
 
-            foundOrder
-                .remove({ _id: id }, function (err, result) {
-                    if (err) {
-                        return callback(err);
-                    }
-                    return callback(null, true, "Order deleted");
-                });
         });
     }
 };
