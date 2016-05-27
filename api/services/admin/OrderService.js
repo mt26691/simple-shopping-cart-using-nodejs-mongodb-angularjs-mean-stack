@@ -78,7 +78,35 @@ var self = {
                 return callback(null, foundOrder);
             });
     },
+    'getCurrentOrder': function (currentUser, orderId, state, callback) {
+        if (currentUser) {
+            Order
+                .findOne({ createdBy: currentUser.id, state: state })
+                .exec(function (err, foundOrder) {
+                    if (err) {
+                        return callback(err);
+                    }
+                    if (!foundOrder) {
+                        return callback(null, null);
+                    }
+                    return callback(null, foundOrder);
+                });
+        }
+        else {
+            Order
+                .findOne({ createdBy: null, _id: orderId, state: state })
+                .exec(function (err, foundOrder) {
+                    if (err) {
+                        return callback(err);
+                    }
+                    if (!foundOrder) {
+                        return callback(null, null);
+                    }
+                    return callback(null, foundOrder);
+                });
+        }
 
+    },
     //create, update order
     'save': function (order, callback) {
         //update order
@@ -127,6 +155,63 @@ var self = {
             }
         });
     },
+    'addToCart': function (currentUser, cartId, product, quantity, callback) {
+        //find product first, if not found, reject
+        productService.get(product, function (err, foundProduct) {
+            if (foundProduct) {
+                var currentPrice = productService.getCurrentProductPrice(foundProduct);
+
+                //find current cart
+                self.getCurrentOrder(currentUser, cartId, "cart", function (err, foundOrder) {
+                    if (foundOrder) {
+                        if (quantity == 0) {
+                            // removed product if quantity = 0;
+                            foundOrder.lineItems.pull({ product: product });
+                            foundOrder.save();
+                            return callback(null, true, "Order updated, product removed sucessfully", foundOrder);
+                        }
+                        foundOrder.update({ 'lineItems.product': product }, {
+                            '$set': {
+                                'items.$.pricing': currentPrice,
+                                'items.$.quantity': quantity
+                            }
+                        }, function (err, updatedOrder) {
+                            return callback(null, true, "Order updated, product added sucessfully", updatedOrder);
+                        });
+                    }
+                    else {
+                        if (quantity == 0) {
+                            return callback(null, false, "Can't not add product with quantity = 0");
+                        }
+                        var subTotal = currentPrice * quantity;
+                        var order = {
+                            createdBy: currentUser != null ? currentUser.id : null,
+                            updatedBy: currentUser != null ? currentUser.id : null,
+                            lineItems: [{
+                                product: product,
+                                quantity: quantity,
+                                currentPrice: currentPrice
+                            }],
+                            subTotal: subTotal
+                        };
+                        //Create order;
+                        Order.create(order, function (err, createdOrder) {
+                            if (err) {
+                                return callback(err);
+                            }
+                            return callback(null, true, "Order created", createdOrder);
+                        });
+
+                    }
+                });
+            }
+            else {
+                return callback(null, false, "Product not found");
+            }
+        });
+
+
+    },
     updateLineItems: function (productList, callback) {
         /*
             productList : [{
@@ -149,6 +234,10 @@ var self = {
                         .map(c => c.quantity)
                         .value()[0];
 
+                    //if quantity == 0, remove product
+                    if (!isNaN(quantity) || quantity == null || quantity == 0) {
+                        continue;
+                    }
                     //return product
                     var returnProduct = {
                         product: currentProduct.id,
@@ -170,7 +259,7 @@ var self = {
     updateLineItemsManually: function (orderId, callback) {
         Order
             .findOne({ _id: orderId })
-            .select({ createdAt: 0, updatedAt: 0, __v: 0 , shippingAddress:0})
+            .select({ createdAt: 0, updatedAt: 0, __v: 0, shippingAddress: 0 })
             .exec(function (err, foundOrder) {
                 if (err) {
                     return callback(err);
@@ -178,7 +267,7 @@ var self = {
                 if (!foundOrder) {
                     return callback(null, false, "Order not found");
                 }
-               
+
                 self.updateLineItems(foundOrder.lineItems, function (returnProductList, subTotal) {
                     foundOrder.lineItems = returnProductList;
                     foundOrder.subTotal = subTotal;

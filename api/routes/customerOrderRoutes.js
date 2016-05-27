@@ -1,21 +1,26 @@
 /**
 * Article Routes
 *
-* @module      :: Article Routes
+* @module      :: Customer Order Routes
 * @description	:: perform request that related to article management module
 */
 var express = require('express');
 var router = express.Router();
-var articleController = require("../controllers/v1/admin/ArticleController");
+var customerOrderController = require("../controllers/v1/CustomerOrderController");
 var checkIn = require("../policies/checkin");
-var isAdmin = require("../policies/isAdmin");
+var isAuthenticated = require("../policies/isAuthenticated");
 
-//CRUD article, you must check current logged user is admin or not first
-router.get('/', [checkIn, isAdmin, articleController.query]);
-router.get('/:id', [checkIn, isAdmin, articleController.get]);
-router.post('/', [checkIn, isAdmin, articleController.post]);
+//get all orders
+router.get('/', [checkIn, customerOrderController.query]);
 
+//get current order
+router.get('/current', [checkIn, customerOrderController.query]);
 
-router.delete('/:id', [checkIn , isAdmin, articleController.delete]);
+//get order base on id
+router.get('/:id', [checkIn, isAuthenticated, customerOrderController.query]);
+
+router.post('/addToCart', [checkIn, customerOrderController.getCurrentCart, customerOrderController.addToCart]);
+router.post('/checkout', [checkIn, customerOrderController.post]);
+// router.post('/review', [checkIn, isAuthenticated, customerOrderController.post]);
 
 module.exports = router;

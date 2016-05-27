@@ -145,6 +145,12 @@ var self = {
                     return callback(null, true, "Product deleted");
                 });
         });
+    },
+    'getCurrentProductPrice': function (product) {
+        if (product.pricing.sale && product.pricing.sale > 0) {
+            return product.pricing.sale;
+        }
+        return product.pricing.retail;
     }
 };
 

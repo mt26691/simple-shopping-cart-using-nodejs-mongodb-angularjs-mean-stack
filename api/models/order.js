@@ -22,7 +22,11 @@ var orderSchema = new mongoose.Schema({
         city: { type: String, minlength: 2, maxlength: 256 },
         receiver: { type: String, minlength: 2, maxlength: 256 },
     },
-
+    trackingCode: {
+        type: String,
+        minlength: 36,
+        maxlength: 36
+    },
     subTotal: {
         type: Number,
         min: 0
