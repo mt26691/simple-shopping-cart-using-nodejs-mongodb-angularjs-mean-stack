@@ -183,7 +183,7 @@ module.exports = function (callback) {
                                     }
 
                                 ],
-                                subTotal: 12345,
+                                
                                 createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id
                             },
                             //3
@@ -201,7 +201,7 @@ module.exports = function (callback) {
                                         pricing: data.newProducts[2].sale
                                     }
                                 ],
-                                subTotal: 123455,
+                                
                                 createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id
                             },
                             //4
@@ -219,7 +219,7 @@ module.exports = function (callback) {
                                         pricing: data.newProducts[2].sale
                                     }
                                 ],
-                                subTotal: 123455,
+                                
                                 createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id
                             },
                             //5
@@ -237,7 +237,7 @@ module.exports = function (callback) {
                                         pricing: data.newProducts[2].sale
                                     }
                                 ],
-                                subTotal: 123455,
+                                
                                 createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id
                             },
                             //6
@@ -255,7 +255,7 @@ module.exports = function (callback) {
                                         pricing: data.newProducts[2].sale
                                     }
                                 ],
-                                subTotal: 123455,
+                                
                                 createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id
                             },
                         ];

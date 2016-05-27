@@ -6,7 +6,7 @@
 */
 
 //load order services
-var orderService = require("../../../services/admin/OrderService");
+var orderService = require("../../services/admin/OrderService");
 
 module.exports = {
     //query order in database, pagination supported
@@ -59,7 +59,7 @@ module.exports = {
 
         if (!user) {
             if (req.cookies.orderId) {
-                cartId = req.cookies.orderId;
+                cartId = req.cookies.order.orderId;
             }
         }
 
@@ -70,9 +70,20 @@ module.exports = {
         if (isNaN(postData.quantity) || postData.quantity < 0) {
             postData.quantity = 1;
         }
-        
-        orderService.addToCart(req.user, cartId, postData.product, postData.quantity, function () {
 
+        orderService.addToCart(req.user, cartId, postData.product, postData.quantity, function (err, result, msg, order) {
+            if (err) {
+                return res.status(500).json({ err: true, msg: "Server error in adding to cart" });
+            }
+            if (!result) {
+                return res.status(200).json({ err: true, msg: msg });
+            }
+            if (!req.user) {
+                var expiresTime = 60 * 60 * 1000 * 14;
+                res.cookie("order", { orderId: order.id }, { expires: new Date(Date.now() + expiresTime), httpOnly: true });
+            }
+            
+            return res.status(200).json({ err: false, msg: "Current Cart", cart: order });
         });
     },
     'getCurrentCart': function (req, res, next) {

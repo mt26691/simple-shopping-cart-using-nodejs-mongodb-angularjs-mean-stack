@@ -27,10 +27,6 @@ var orderSchema = new mongoose.Schema({
         minlength: 36,
         maxlength: 36
     },
-    subTotal: {
-        type: Number,
-        min: 0
-    },
 
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },

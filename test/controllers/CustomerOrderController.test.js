@@ -27,42 +27,43 @@ describe('Admin Order Controller Test', function () {
         });
     });
 
-    //query method in in /api/controllers/v1/CustomOrderController.js
+    //addToCart method in in /api/controllers/v1/CustomOrderController.js
     it('should let anonymous customer add product to cart', function (done) {
-        var products = [{
-            product: data.newProducts[0].id,
+        var products = {
+            product: newProducts[0].id,
             quantity: 1
-        }];
+        };
 
         server
-            .post(apiURL)
+            .post(apiURL + "/addToCart")
             .send(products)  //send as anonymous
             .expect('Content-type', /json/)
             .expect(200)
             .end(function (err, res) {
                 res.status.should.equal(200); // OK
-                var returnData = res.body.data;
-                assert.equal(true, returnData.lineItems > 0);
-                assert.equal(true, returnData.subTotal > 0);
+
+                var returnData = res.body.cart;
+                assert.equal(true, returnData.lineItems.length > 0);
+                assert.equal("cart", returnData.state);
                 done();
             });
 
     });
 
-    //query method in /api/controllers/v1/CustomOrderController.js
+    //addToCart method in in /api/controllers/v1/CustomOrderController.js
     it('should let logged customer add product to cart', function (done) {
         server
             .post(testConfig.apiLogin)
-            .send(oldUsers[1])  // log in as normal user
+            .send(oldUsers[0])  // log in as normal user
             .expect('Content-type', /json/)
             .end(function (err, res) {
                 res.status.should.equal(200);
                 assert.equal(true, !res.body.err);  // check if login is ok
 
-                var products = [{
-                    product: data.newProducts[0].id,
+                var products = {
+                    product: newProducts[0].id,
                     quantity: 1
-                }];
+                };
 
                 server
                     .post(apiURL + "/addToCart")  // add to cart
@@ -70,68 +71,50 @@ describe('Admin Order Controller Test', function () {
                     .expect('Content-type', /json/)
                     .end(function (err, res) {
                         res.status.should.equal(200); // OK
-                        var returnData = res.body.data;
+                        var returnData = res.body.cart;
                         assert.equal(true, returnData.lineItems.length == 1);
-                        assert.equal(true, returnData.subTotal > 0);
+                        assert.equal("cart", returnData.state);
                         done();
                     });
-
             });
-
     });
 
-    //query method in /api/controllers/v1/CustomOrderController.js
+    //addToCart method in in /api/controllers/v1/CustomOrderController.js
     it('should remove product from cart if product quantity is 0', function (done) {
         server
             .post(testConfig.apiLogin)
-            .send(oldUsers[1])  // log in as normal user
+            .send(oldUsers[1])  // log in as normal user, who current has no product in his cart
             .expect('Content-type', /json/)
             .end(function (err, res) {
                 res.status.should.equal(200);
                 assert.equal(true, !res.body.err);  // check if login is ok
 
-                var products = [
-                    {
-                        product: data.newProducts[0].id,
-                        quantity: 1
-                    },
-                    {
-                        product: data.newProducts[1].id,
-                        quantity: 2
-                    }
-                ];
+                var product = { product: newProducts[5].id, quantity: 6 };
 
                 server
                     .post(apiURL + "/addToCart")  // add to cart
-                    .send(products)
+                    .send(product)
                     .expect('Content-type', /json/)
                     .end(function (err, res) {
                         res.status.should.equal(200); // OK
-                        var returnData = res.body.data;
-                        assert.equal(true, returnData.lineItems == 2);
-                        assert.equal(true, returnData.subTotal > 0);
+                        var returnData = res.body.cart;
+
+                        assert.equal(true, returnData.lineItems.length == 2);
+                        assert.equal("cart", returnData.state);
 
                         //set quantity to 0
-                        var products = [
-                            {
-                                product: data.newProducts[0].id,
-                                quantity: 0
-                            },
-                            {
-                                product: data.newProducts[1].id,
-                                quantity: 2
-                            }
-                        ];
+                        product = { product: newProducts[0].id, quantity: 0 };
 
                         server
                             .post(apiURL + "/addToCart")  // add to cart
-                            .send(products)
+                            .send(product)
                             .expect('Content-type', /json/)
                             .end(function (err, res) {
 
-                                var returnData = res.body.data;
-                                assert.equal(true, returnData.lineItems.length == 0);
-                                assert.equal(true, returnData.subTotal > 0);
+                                var returnData = res.body.cart;
+
+                                assert.equal(true, returnData.lineItems.length == 1);
+                                assert.equal("cart", returnData.state);
                                 done();
                             });
 
@@ -141,7 +124,7 @@ describe('Admin Order Controller Test', function () {
 
     });
 
-    //query method in /api/controllers/v1/CustomOrderController.js
+    //addToCart method in in /api/controllers/v1/CustomOrderController.js
     it('should not let user add fake product to cart', function (done) {
         server
             .post(testConfig.apiLogin)
@@ -151,10 +134,10 @@ describe('Admin Order Controller Test', function () {
                 res.status.should.equal(200);
                 assert.equal(true, !res.body.err);  // check if login is ok
                 //fake product
-                var products = [{
+                var product = {
                     product: "xxxx",
                     quantity: 1
-                }];
+                };
 
                 server
                     .post(apiURL + "/addToCart")  // add to cart
@@ -162,8 +145,8 @@ describe('Admin Order Controller Test', function () {
                     .expect('Content-type', /json/)
                     .end(function (err, res) {
                         res.status.should.equal(200); // OK
-                        var returnData = res.body.data;
-                        assert.equal(0, returnData.lineItems.length);
+                        var returnData = res.body;
+                        assert.equal(true, returnData.err);
                         done();
                     });
 
@@ -171,13 +154,11 @@ describe('Admin Order Controller Test', function () {
 
     });
 
-
-
     //query method in /api/controllers/v1/CustomOrderController.js with param: page 2
     it('should let anonymous who recently logged migrate cart', function (done) {
 
         var products = [{
-            product: data.newProducts[0].id,
+            product: newProducts[0].id,
             quantity: 1
         }];
 
@@ -188,9 +169,9 @@ describe('Admin Order Controller Test', function () {
             .expect(200)
             .end(function (err, res) {
                 res.status.should.equal(200); // OK
-                var returnData = res.body.data;
+                var returnData = res.body.cart;
                 assert.equal(true, returnData.lineItems > 0);
-                assert.equal(true, returnData.subTotal > 0);
+
                 server
                     .post(testConfig.apiLogin)
                     .send(oldUsers[1])  // log in as normal user
@@ -287,7 +268,7 @@ describe('Admin Order Controller Test', function () {
             });
     });
 
-        //query method in /api/controllers/v1/CustomOrderController.js with keyword = Nguyen
+    //query method in /api/controllers/v1/CustomOrderController.js with keyword = Nguyen
     it('should let anonymous user tracking order based on tracking code', function (done) {
         server
             .post(testConfig.apiLogin)
@@ -307,7 +288,7 @@ describe('Admin Order Controller Test', function () {
                     });
             });
     });
-    
+
     // get in /api/controllers/v1/CustomOrderController.js
     it('should let current user checkout', function (done) {
         server

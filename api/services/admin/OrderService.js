@@ -35,11 +35,6 @@ var self = {
             };
         }
 
-        //if query data is a number greater than 0
-        if (!isNaN(queryData.keyword) && queryData > 0) {
-            query.where('subTotal').gt(queryData.keyword);
-        }
-
         var query = Order
             .find(realQueryData)
             .populate('createdBy', 'name');
@@ -110,7 +105,7 @@ var self = {
     //create, update order
     'save': function (order, callback) {
         //update order
-        self.updateLineItems(order.lineItems, function (returnProductList, subTotal) {
+        self.updateLineItems(order.lineItems, function (returnProductList) {
             if (order.id) {
                 Order
                     .findOne({ _id: order.id })
@@ -128,7 +123,6 @@ var self = {
 
                         if (order.state == "cart" || order.state == "checkout") {
                             foundOrder.lineItems = returnProductList;
-                            foundOrder.subTotal = subTotal;
                             foundOrder.save();
                             return callback(null, true, "Order saved", foundOrder);
                         }
@@ -142,7 +136,6 @@ var self = {
             else {
                 //update line items
                 order.lineItems = returnProductList;
-                order.subTotal = subTotal;
 
                 Order.create(order, function (err, savedOrder) {
                     if (err) {
@@ -166,33 +159,50 @@ var self = {
                     if (foundOrder) {
                         if (quantity == 0) {
                             // removed product if quantity = 0;
-                            foundOrder.lineItems.pull({ product: product });
+                            var updatedLineItems = _(foundOrder.lineItems)
+                                .filter(c => c.product != product).value();
+                            foundOrder.lineItems = updatedLineItems;
                             foundOrder.save();
                             return callback(null, true, "Order updated, product removed sucessfully", foundOrder);
                         }
-                        foundOrder.update({ 'lineItems.product': product }, {
-                            '$set': {
-                                'items.$.pricing': currentPrice,
-                                'items.$.quantity': quantity
+                        else {
+                            var isExistProduct = false;
+                         
+                            for (var i = 0; i < foundOrder.lineItems.length; i++) {
+                                var currentProduct = foundOrder.lineItems[i];
+                                if (currentProduct.product == product) {
+                                    currentProduct.product.pricing = currentPrice;
+                                    currentProduct.product.quantity = quantity;
+                                    isExistProduct = true;
+                                    break;
+                                }
                             }
-                        }, function (err, updatedOrder) {
-                            return callback(null, true, "Order updated, product added sucessfully", updatedOrder);
-                        });
+                            if (!isExistProduct) {
+                                foundOrder.lineItems.push({
+                                    product: product,
+                                    quantity: quantity,
+                                    pricing: currentPrice
+                                });
+                            }
+                            foundOrder.save();
+                            return callback(null, true, "Order updated, product added sucessfully", foundOrder);
+
+                        }
                     }
                     else {
                         if (quantity == 0) {
                             return callback(null, false, "Can't not add product with quantity = 0");
                         }
-                        var subTotal = currentPrice * quantity;
                         var order = {
+                            state: "cart",
                             createdBy: currentUser != null ? currentUser.id : null,
                             updatedBy: currentUser != null ? currentUser.id : null,
                             lineItems: [{
                                 product: product,
                                 quantity: quantity,
-                                currentPrice: currentPrice
-                            }],
-                            subTotal: subTotal
+                                pricing: currentPrice
+                            }]
+
                         };
                         //Create order;
                         Order.create(order, function (err, createdOrder) {
@@ -221,7 +231,6 @@ var self = {
         */
 
         var returnProductList = [];
-        var subTotal = 0;
         var productIdList = _.map(productList, "product");
 
         Product
@@ -235,8 +244,8 @@ var self = {
                         .value()[0];
 
                     //if quantity == 0, remove product
-                    if (!isNaN(quantity) || quantity == null || quantity == 0) {
-                        continue;
+                    if (isNaN(quantity) || quantity == null || quantity == 0) {
+                        return true;
                     }
                     //return product
                     var returnProduct = {
@@ -249,11 +258,10 @@ var self = {
                     if (currentProduct.pricing.currentProduct && product.pricing.sale > 0) {
                         returnProduct.pricing = currentProduct.pricing.sale;
                     }
-                    subTotal += returnProduct.pricing * quantity;
                     returnProductList.push(returnProduct);
                 });
 
-                callback(returnProductList, subTotal);
+                callback(returnProductList);
             });
     },
     updateLineItemsManually: function (orderId, callback) {
@@ -268,9 +276,8 @@ var self = {
                     return callback(null, false, "Order not found");
                 }
 
-                self.updateLineItems(foundOrder.lineItems, function (returnProductList, subTotal) {
+                self.updateLineItems(foundOrder.lineItems, function (returnProductList) {
                     foundOrder.lineItems = returnProductList;
-                    foundOrder.subTotal = subTotal;
                     foundOrder.save();
                     return callback(null, true, "Order saved", foundOrder);
                 });
