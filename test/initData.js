@@ -156,7 +156,7 @@ module.exports = function (callback) {
                             },
                             //1
                             {
-                                state: "checkout", shippingAddress: { street: "Le Duan", city: "Da Nang", receiver: "Nguyen Manh Tung" },
+                                state: "checkout", orderInfo: { street: "Le Duan", city: "Da Nang", receiver: "Nguyen Manh Tung" },
                                 lineItems: [
                                     {
                                         product: data.newProducts[0].id,
@@ -174,7 +174,7 @@ module.exports = function (callback) {
                             },
                             //2
                             {
-                                state: "ordered", shippingAddress: { street: "Le Duan", city: "Da Nang", receiver: "Nguyen Manh Tung" },
+                                state: "ordered", orderInfo: { street: "Le Duan", city: "Da Nang", receiver: "Nguyen Manh Tung" },
                                 lineItems: [
                                     {
                                         product: data.newProducts[0].id,
@@ -183,12 +183,12 @@ module.exports = function (callback) {
                                     }
 
                                 ],
-                                
+
                                 createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id
                             },
                             //3
                             {
-                                state: "shipping", shippingAddress: { street: "Le Duan", city: "Da Nang", receiver: "Nguyen Manh Tung" },
+                                state: "shipping", orderInfo: { street: "Le Duan", city: "Da Nang", receiver: "Nguyen Manh Tung" },
                                 lineItems: [
                                     {
                                         product: data.newProducts[0].id,
@@ -201,12 +201,12 @@ module.exports = function (callback) {
                                         pricing: data.newProducts[2].sale
                                     }
                                 ],
-                                
+
                                 createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id
                             },
                             //4
                             {
-                                state: "shipping", shippingAddress: { street: "Le Duan", city: "Da Nang", receiver: "Nguyen Manh Tung" },
+                                state: "shipping", orderInfo: { street: "Le Duan", city: "Da Nang", receiver: "Nguyen Manh Tung" },
                                 lineItems: [
                                     {
                                         product: data.newProducts[0].id,
@@ -219,12 +219,12 @@ module.exports = function (callback) {
                                         pricing: data.newProducts[2].sale
                                     }
                                 ],
-                                
+
                                 createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id
                             },
                             //5
                             {
-                                state: "shipping", shippingAddress: { street: "Le Duan", city: "Da Nang", receiver: "Nguyen Manh Tung" },
+                                state: "shipping", orderInfo: { street: "Le Duan", city: "Da Nang", receiver: "Nguyen Manh Tung" },
                                 lineItems: [
                                     {
                                         product: data.newProducts[0].id,
@@ -237,12 +237,12 @@ module.exports = function (callback) {
                                         pricing: data.newProducts[2].sale
                                     }
                                 ],
-                                
+
                                 createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id
                             },
                             //6
                             {
-                                state: "shipping", shippingAddress: { street: "Le Duan", city: "Da Nang", receiver: "Nguyen Manh Tung" },
+                                state: "shipping", shippiorderInfongAddress: { street: "Le Duan", city: "Da Nang", receiver: "Nguyen Manh Tung" },
                                 lineItems: [
                                     {
                                         product: data.newProducts[0].id,
@@ -255,8 +255,26 @@ module.exports = function (callback) {
                                         pricing: data.newProducts[2].sale
                                     }
                                 ],
-                                
+
                                 createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id
+                            },
+                            //7
+                            {
+                                state: "shipping", orderInfo: { street: "Le Duan", city: "Da Nang", receiver: "Nguyen Manh Tung" },
+                                lineItems: [
+                                    {
+                                        product: data.newProducts[0].id,
+                                        quantity: 1,
+                                        pricing: data.newProducts[0].sale
+                                    },
+                                    {
+                                        product: data.newProducts[2].id,
+                                        quantity: 5,
+                                        pricing: data.newProducts[2].sale
+                                    }
+                                ],
+                                trackingCode:"123456123456123456123456123456123456" 
+                               
                             },
                         ];
 

@@ -213,7 +213,7 @@ describe('Admin Order Controller Test', function () {
             });
     });
 
-    //query method in /api/controllers/v1/CustomOrderController.js with keyword = Nguyen, page = 2
+    //allOrders method in /api/controllers/v1/CustomOrderController.js
     it('Should let anonymous users see their cart', function (done) {
 
         var products = {
@@ -250,7 +250,7 @@ describe('Admin Order Controller Test', function () {
 
     });
 
-    //query method in /api/controllers/v1/CustomOrderController.js with keyword = Nguyen
+    //allOrders method in /api/controllers/v1/CustomOrderController.js
     it('Should let current user see all of their orders', function (done) {
         server
             .post(testConfig.apiLogin)
@@ -260,11 +260,11 @@ describe('Admin Order Controller Test', function () {
                 res.status.should.equal(200);
 
                 server
-                    .get(apiURL + "/allOrders")  // query cart
+                    .get(apiURL + "/allOrders")  // query all orders
                     .expect('Content-type', /json/)
                     .end(function (err, res) {
                         res.status.should.equal(200);  // query OK because I can see my cart 
-                      
+
                         // Check returned data
                         assert.equal(true, res.body.orders.length > 0);
                         done();
@@ -272,64 +272,44 @@ describe('Admin Order Controller Test', function () {
             });
     });
 
-    //query method in /api/controllers/v1/CustomOrderController.js with keyword = Nguyen
-    it('should let logged user see their order based on id', function (done) {
-        server
-            .post(testConfig.apiLogin)
-            .send(oldUsers[1])  // log in as admin
-            .expect('Content-type', /json/)
-            .end(function (err, res) {
-                res.status.should.equal(200);
-
-                server
-                    .get(apiURL + "/currentCart")  // query cart
-                    .expect('Content-type', /json/)
-                    .end(function (err, res) {
-                        res.status.should.equal(200);  // query OK because I can see my cart 
-
-                        // Check returned data
-                        done();
-                    });
-            });
-    });
-
-    //query method in /api/controllers/v1/CustomOrderController.js with keyword = Nguyen
+    //getByTrackingCode method in /api/controllers/v1/CustomOrderController.js
     it('should let anonymous user tracking order based on tracking code', function (done) {
         server
-            .post(testConfig.apiLogin)
-            .send(oldUsers[1])  // log in as admin
+            .get(apiURL + "/getByTrackingCode?trackingCode=" + oldOrders[7].trackingCode)  // get order by tracking code
             .expect('Content-type', /json/)
             .end(function (err, res) {
-                res.status.should.equal(200);
-
-                server
-                    .get(apiURL + "/currentCart")  // query cart
-                    .expect('Content-type', /json/)
-                    .end(function (err, res) {
-                        res.status.should.equal(200);  // query OK because I can see my cart 
-
-                        // Check returned data
-                        done();
-                    });
+                res.status.should.equal(200);  // query OK because I can see my cart by tracking code
+                // Check returned data
+                assert.equal(false, res.body.err);
+                assert.equal(oldOrders[7].trackingCode, res.body.order.trackingCode)
+                done();
             });
+
     });
 
-    // get in /api/controllers/v1/CustomOrderController.js
+    // checkout in /api/controllers/v1/CustomOrderController.js
     it('should let current user checkout', function (done) {
+        var checkoutInfo = {
+            street: "Check out street",
+            city: "checkout city",
+            receiver: "check out receiver"
+        };
+
         server
             .post(testConfig.apiLogin)
-            .send(oldUsers[1])  // log in as admin
+            .send(oldUsers[1])  // log in as normal user
             .expect('Content-type', /json/)
             .end(function (err, res) {
                 res.status.should.equal(200);
-
                 server
-                    .post(apiURL + "/checkout")  // query cart
+                    .post(apiURL + "/checkout")  //check out cart
+                    .send(checkoutInfo)
                     .expect('Content-type', /json/)
                     .end(function (err, res) {
-                        res.status.should.equal(200);  // query OK because I can see my cart 
-
+                        res.status.should.equal(200);
+                        var order = res.body.order;
                         // Check returned data
+                        assert.equal("checkout", order.state);
                         done();
                     });
             });

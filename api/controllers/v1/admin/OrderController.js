@@ -59,7 +59,7 @@ module.exports = {
         var item = {
             id: postData.id,
             state: postData.state,
-            shippingAddress: postData.shippingAddress,
+            orderInfo: postData.orderInfo,
             lineItems: postData.lineItems
         };
 

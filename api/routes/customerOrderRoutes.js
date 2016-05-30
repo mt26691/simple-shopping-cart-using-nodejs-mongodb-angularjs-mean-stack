@@ -18,12 +18,12 @@ router.get('/currentCart', [checkIn, customerOrderController.getCurrentCart]);
 
 router.get('/allOrders', [checkIn, isAuthenticated, customerOrderController.getAllOrders]);
 
-
+router.get("/getByTrackingCode", [customerOrderController.getByTrackingCode]);
 // //get order base on id
 // router.get('/:id', [checkIn, isAuthenticated, customerOrderController.query]);
 
 router.post('/addToCart', [checkIn, customerOrderController.addToCart]);
-// router.post('/checkout', [checkIn, customerOrderController.post]);
+router.post('/checkout', [checkIn, customerOrderController.checkout]);
 // router.post('/review', [checkIn, isAuthenticated, customerOrderController.post]);
 
 module.exports = router;

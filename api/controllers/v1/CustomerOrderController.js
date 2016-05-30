@@ -95,6 +95,12 @@ module.exports = {
         }
 
     },
+    'getAllOrders': function (req, res, next) {
+        var currentUser = req.user.id;
+        orderService.getAllOrders(currentUser, function (err, foundOrders) {
+            return res.status(200).json({ err: false, orders: foundOrders });
+        });
+    },
     'getCurrentCart': function (req, res, next) {
         var orderId = req.cookies.order != null ? req.cookies.order.orderId : null;
 
@@ -107,11 +113,52 @@ module.exports = {
         });
 
     },
-    'getAllOrders': function (req, res, next) {
-        var currentUser = req.user.id;
-        orderService.getAllOrders(currentUser, function (err, foundOrders) {
-            return res.status(200).json({ err: false, orders: foundOrders });
-        });
+    'getByTrackingCode': function (req, res) {
+        var trackingCode = req.query.trackingCode;
+
+        if (trackingCode) {
+            orderService.getByTrackingCode(trackingCode, function (err, foundOrder) {
+                if (err) {
+                    return res.status(500).json({ err: true, msg: "Error in getByTrackingCode" });
+                }
+
+                return res.status(200).json({ err: false, order: foundOrder });
+            });
+        }
+        else {
+            return res.status(200).json({ err: true, msg: "Tracking code not found" });
+        }
+    },
+    'checkout': function (req, res) {
+        var shippingInfo = {
+            street: req.body.street,
+            city: req.body.city,
+            receiver: req.body.receiver
+        };
+        if (shippingInfo.street == null || shippingInfo.street == ""
+            || shippingInfo.city == null || shippingInfo.city == ""
+            || shippingInfo.receiver == null || shippingInfo.receiver == ""
+        ) {
+            return res.status(200).json({ err: true, msg: "Lacking of shippingInfo" });
+        }
+
+        var orderId = null;
+        if (req.cookies.order) {
+            orderId = req.cookies.orderId;
+        }
+
+        if (req.user || orderId) {
+            orderService.checkout(req.user, orderId, shippingInfo, function (err, result, msg, order) {
+                if (err) {
+                    return res.status(500).json({ err: true, msg: "server error in checkout" });
+                }
+
+                return res.status(200).json({ err: !result, msg: msg, order: order });
+            });
+        }
+        else {
+            return res.status(200).json({ err: true, msg: "Order not found" });
+        }
     },
     //delete order
     'delete': function (req, res) {

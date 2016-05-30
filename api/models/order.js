@@ -17,7 +17,7 @@ var orderSchema = new mongoose.Schema({
             pricing: { type: Number, min: 0 },
         }
     ],
-    shippingAddress: {
+    orderInfo: {
         street: { type: String, minlength: 2, maxlength: 256 },
         city: { type: String, minlength: 2, maxlength: 256 },
         receiver: { type: String, minlength: 2, maxlength: 256 },

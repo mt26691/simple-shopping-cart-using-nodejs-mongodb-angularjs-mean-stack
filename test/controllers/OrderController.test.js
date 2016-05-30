@@ -253,7 +253,7 @@ describe('Admin Order Controller Test', function () {
     // post in /api/controllers/v1/OrderController.js
     it('should let admin create order', function (done) {
         var newlyOrder = oldOrders[1];
-        newlyOrder.shippingAddress = { street: "Newly Order", city: "Newly Order", receiver: "Newly Order" };
+        newlyOrder.orderInfo = { street: "Newly Order", city: "Newly Order", receiver: "Newly Order" };
         newlyOrder.lineItems = [
             { product: newProducts[0].id, quantity: 1 },
             { product: newProducts[2].id, quantity: 2 },
@@ -288,7 +288,7 @@ describe('Admin Order Controller Test', function () {
     // post in /api/controllers/v1/OrderController.js
     it('should let admin update order, line items is update when state = cart or checkout only', function (done) {
         var updatingOrder = newOrders[0].toObject();
-        updatingOrder.shippingAddress = { street: "update Order", city: "update Order", receiver: "update Order" };
+        updatingOrder.orderInfo = { street: "update Order", city: "update Order", receiver: "update Order" };
         updatingOrder.state = "cart";
 
         updatingOrder.lineItems = [
@@ -325,7 +325,7 @@ describe('Admin Order Controller Test', function () {
     // post in /api/controllers/v1/OrderController.js
     it('should let admin update order, line items is not update when state != cart or checkout', function (done) {
         var updatingOrder = newOrders[0].toObject();
-        updatingOrder.shippingAddress = { street: "update Order", city: "update Order", receiver: "update Order" };
+        updatingOrder.orderInfo = { street: "update Order", city: "update Order", receiver: "update Order" };
         updatingOrder.state = "ordered";
 
         updatingOrder.lineItems = [
@@ -389,7 +389,7 @@ describe('Admin Order Controller Test', function () {
     // post in /api/controllers/v1/OrderController.js
     it('should not let admin update user with missing fields', function (done) {
         var updatingOrder = newOrders[0].toObject();
-        updatingOrder.shippingAddress = { street: "update Order", city: "update Order", receiver: "update Order" };
+        updatingOrder.orderInfo = { street: "update Order", city: "update Order", receiver: "update Order" };
         updatingOrder.state = null;
 
         server

@@ -29,8 +29,8 @@ var self = {
             realQueryData = {
                 $or: [
                     //find   with case insentivie
-                    { "shippingAddress.receiver": { $regex: new RegExp('^.*' + queryData.keyword.toLowerCase() + ".*", 'i') } },
-                    { "shippingAddress.street": { $regex: new RegExp('^.*' + queryData.keyword.toLowerCase() + ".*", 'i') } }
+                    { "orderInfo.receiver": { $regex: new RegExp('^.*' + queryData.keyword.toLowerCase() + ".*", 'i') } },
+                    { "orderInfo.street": { $regex: new RegExp('^.*' + queryData.keyword.toLowerCase() + ".*", 'i') } }
                 ]
             };
         }
@@ -67,10 +67,18 @@ var self = {
             .select({ createdAt: 0, updatedAt: 0, __v: 0 })
             .populate('lineItems.product', 'name slug')
             .exec(function (err, foundOrder) {
-                if (err) {
-                    return callback(err);
-                }
-                return callback(null, foundOrder);
+                return callback(err, foundOrder);
+            });
+    },
+    //only  get order which was checkout by anonymous
+    'getByTrackingCode': function (trackingCode, callback) {
+        Order
+            .findOne({ trackingCode: trackingCode, createdBy: null })
+            //not select createdAt, updatedAt and __v fields
+            .select({ createdAt: 0, updatedAt: 0, __v: 0 })
+            .populate('lineItems.product', 'name slug')
+            .exec(function (err, foundOrder) {
+                return callback(err, foundOrder);
             });
     },
     'migrateCart': function (currentUser, orderId) {
@@ -97,18 +105,11 @@ var self = {
         });
     },
     'getCurrentOrder': function (currentUser, orderId, state, callback) {
-
         if (currentUser) {
             Order
                 .findOne({ createdBy: currentUser.id, state: state })
                 .exec(function (err, foundOrder) {
-                    if (err) {
-                        return callback(err);
-                    }
-                    if (!foundOrder) {
-                        return callback(null, null);
-                    }
-                    return callback(null, foundOrder);
+                    return callback(err, foundOrder);
                 });
         }
         else {
@@ -149,7 +150,7 @@ var self = {
                         }
 
                         foundOrder.state = order.state;
-                        foundOrder.shippingAddress = order.shippingAddress;
+                        foundOrder.orderInfo = order.orderInfo;
                         //only update line items when order state == cart or checkout
 
                         if (order.state == "cart" || order.state == "checkout") {
@@ -179,6 +180,26 @@ var self = {
             }
         });
     },
+    'checkout': function (currentUser, orderId, orderInfo, callback) {
+        self.getCurrentOrder(currentUser, orderId, "cart", function (err, foundOrder) {
+            if (err) {
+                return callback(err);
+            }
+            if (!foundOrder) {
+                return callback(err, false, "Order not found");
+            }
+
+            self.updateLineItems(foundOrder.lineItems, function (returnLineItems) {
+                foundOrder.orderInfo = orderInfo;
+                foundOrder.state = "checkout";
+                foundOrder.lineItems = returnLineItems;
+                foundOrder.save();
+                return callback(null, true, "order is checkout", foundOrder);
+            });
+
+        });
+    }
+    ,
     'addToCart': function (currentUser, cartId, product, quantity, callback) {
         //find product first, if not found, reject
         productService.get(product, function (err, foundProduct) {
@@ -298,13 +319,10 @@ var self = {
     updateLineItemsManually: function (orderId, callback) {
         Order
             .findOne({ _id: orderId })
-            .select({ createdAt: 0, updatedAt: 0, __v: 0, shippingAddress: 0 })
+            .select({ createdAt: 0, updatedAt: 0, __v: 0, orderInfo: 0 })
             .exec(function (err, foundOrder) {
-                if (err) {
-                    return callback(err);
-                }
-                if (!foundOrder) {
-                    return callback(null, false, "Order not found");
+                if (err || !foundOrder) {
+                    return callback(err, false, "Order not found");
                 }
 
                 self.updateLineItems(foundOrder.lineItems, function (returnProductList) {
