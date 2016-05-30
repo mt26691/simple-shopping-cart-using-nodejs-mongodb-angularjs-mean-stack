@@ -73,7 +73,31 @@ var self = {
                 return callback(null, foundOrder);
             });
     },
+    'migrateCart': function (currentUser, orderId) {
+        self.getCurrentOrder(currentUser, null, "cart", function (err, foundOrder) {
+            Order
+                .findOne({ _id: orderId })
+                .exec(function (err, currentOrder) {
+                    if (foundOrder) {
+                        for (var i = 0; i < foundOrder.lineItems; i++) {
+                            for (var j = 0; j < currentOrder.lineItems; j++) {
+                                if (foundOrder.lineItems[i]._id == currentOrder.lineItems[i]._id) {
+                                    foundOrder.lineItems[i].quantity = currentOrder.lineItems[i].quantity;
+                                }
+                            }
+                        }
+                    }
+                    else {
+                        currentOrder.createdBy = currentUser.id;
+                        currentOrder.updatedBy = currentUser.id;
+                        currentOrder.save();
+                    }
+                });
+
+        });
+    },
     'getCurrentOrder': function (currentUser, orderId, state, callback) {
+
         if (currentUser) {
             Order
                 .findOne({ createdBy: currentUser.id, state: state })
@@ -101,6 +125,13 @@ var self = {
                 });
         }
 
+    },
+    'getAllOrders': function (userId, callback) {
+        Order
+            .find({ createdBy: userId })
+            .exec(function (err, foundOrders) {
+                return callback(err, foundOrders);
+            });
     },
     //create, update order
     'save': function (order, callback) {
@@ -167,7 +198,7 @@ var self = {
                         }
                         else {
                             var isExistProduct = false;
-                         
+
                             for (var i = 0; i < foundOrder.lineItems.length; i++) {
                                 var currentProduct = foundOrder.lineItems[i];
                                 if (currentProduct.product == product) {

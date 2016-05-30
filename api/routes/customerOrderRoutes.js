@@ -14,12 +14,15 @@ var isAuthenticated = require("../policies/isAuthenticated");
 // router.get('/', [checkIn, customerOrderController.query]);
 
 // //get current order
-// router.get('/current', [checkIn, customerOrderController.query]);
+router.get('/currentCart', [checkIn, customerOrderController.getCurrentCart]);
+
+router.get('/allOrders', [checkIn, isAuthenticated, customerOrderController.getAllOrders]);
+
 
 // //get order base on id
 // router.get('/:id', [checkIn, isAuthenticated, customerOrderController.query]);
 
- router.post('/addToCart', [checkIn, customerOrderController.addToCart]);
+router.post('/addToCart', [checkIn, customerOrderController.addToCart]);
 // router.post('/checkout', [checkIn, customerOrderController.post]);
 // router.post('/review', [checkIn, isAuthenticated, customerOrderController.post]);
 

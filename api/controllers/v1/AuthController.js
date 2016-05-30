@@ -8,12 +8,12 @@
 var authService = require("../../services/AuthService");
 var jwtService = require("../../services/JWTService");
 module.exports = {
-    
-     //Login method
-    'login': function(req, res) {
+
+    //Login method
+    'login': function (req, res) {
         //get post data
         var data = { email: req.body.email, password: req.body.password, isRemember: req.body.isRemember };
-        authService.login(data, function(err, user) {
+        authService.login(data, function (err, user) {
             if (err) {
                 return res.status(200).json({ err: true, msg: "server error" });
             }
@@ -30,27 +30,28 @@ module.exports = {
                     //14 days 14h 60 min 60s 1000 milisecond    
                     expiresTime = 14 * 24 * 60 * 60 * 1000;
                 }
-                
+
                 //save with new access token
                 var clientToken = jwtService.issueToken(user.accessToken);
 
                 var returnUser = { name: user.name, role: user.role, accessRight: user.accessRight };
 
                 var returnedData = { token: clientToken, isRemember: data.isRemember };
-
+              
                 //issue new cookie
                 res.cookie("AuthSession", returnedData, { expires: new Date(Date.now() + expiresTime), httpOnly: true });
 
                 res.status(200).json({ user: returnUser });
+               
             }
         });
     },
-    
+
     //let user logout
-    'logout': function(req, res) {
+    'logout': function (req, res) {
         if (req.user) {
             //delete current access token
-            authService.logout(req.user, function(err, result) {
+            authService.logout(req.user, function (err, result) {
             });
         }
         res.clearCookie('AuthSession');

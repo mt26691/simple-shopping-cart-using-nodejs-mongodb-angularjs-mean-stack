@@ -154,45 +154,44 @@ describe('Admin Order Controller Test', function () {
 
     });
 
-    //query method in /api/controllers/v1/CustomOrderController.js with param: page 2
-    it('should let anonymous who recently logged migrate cart', function (done) {
+    // //query method in /api/controllers/v1/CustomOrderController.js with param: page 2
+    // it('should let anonymous who recently logged migrate cart', function (done) {
 
-        var products = [{
-            product: newProducts[0].id,
-            quantity: 1
-        }];
+    //     var products = {
+    //         product: newProducts[0].id,
+    //         quantity: 1
+    //     };
 
-        server
-            .post(apiURL)
-            .send(products)  //send as anonymous
-            .expect('Content-type', /json/)
-            .expect(200)
-            .end(function (err, res) {
-                res.status.should.equal(200); // OK
-                var returnData = res.body.cart;
-                assert.equal(true, returnData.lineItems > 0);
+    //     server
+    //         .post(apiURL + "/addToCart")
+    //         .send(products)  //send as anonymous
+    //         .expect('Content-type', /json/)
+    //         .expect(200)
+    //         .end(function (err, res) {
+    //             res.status.should.equal(200); // OK
 
-                server
-                    .post(testConfig.apiLogin)
-                    .send(oldUsers[1])  // log in as normal user
-                    .expect('Content-type', /json/)
-                    .end(function (err, res) {
+    //             var returnData = res.body.cart;
+    //             assert.equal(true, returnData.lineItems.length > 0);
+    //             assert.equal("cart", returnData.state);
 
-                        server
-                            .get(apiURL + "/current")
-                            .expect(200)
-                            .end(function (err, res) {
+    //             server
+    //                 .post(testConfig.apiLogin)
+    //                 .send(oldUsers[1])  // log in as normal user
+    //                 .expect('Content-type', /json/)
+    //                 .end(function (err, res) {
 
-                                //check product id here
-                                done();
-                            });
+    //                     server
+    //                         .get(apiURL + "/currentCart")
+    //                         .expect(200)
+    //                         .end(function (err, res) {
+    //                             //check product id here
+    //                             done();
+    //                         });
+    //                 });
+    //         });
+    // });
 
-                    });
-            });
-
-    });
-
-    //query method in /api/controllers/v1/CustomOrderController.js with keyword = Nguyen
+    //get current cart
     it('Should let current user see their cart', function (done) {
         server
             .post(testConfig.apiLogin)
@@ -202,12 +201,13 @@ describe('Admin Order Controller Test', function () {
                 res.status.should.equal(200);
 
                 server
-                    .get(apiURL + "/current")  // query cart
+                    .get(apiURL + "/currentCart")  // query cart
                     .expect('Content-type', /json/)
                     .end(function (err, res) {
                         res.status.should.equal(200);  // query OK because I can see my cart 
-
                         // Check returned data
+
+                        assert.equal(false, res.body.err);
                         done();
                     });
             });
@@ -215,19 +215,43 @@ describe('Admin Order Controller Test', function () {
 
     //query method in /api/controllers/v1/CustomOrderController.js with keyword = Nguyen, page = 2
     it('Should let anonymous users see their cart', function (done) {
-        server
-            .get(apiURL + "/current")  // query cart
-            .expect('Content-type', /json/)
-            .end(function (err, res) {
-                res.status.should.equal(200);  // query OK because I can see my cart 
 
-                // Check returned data
-                done();
+        var products = {
+            product: newProducts[0].id,
+            quantity: 1
+        };
+
+        server
+            .post(apiURL + "/addToCart")
+            .send(products)  //send as anonymous
+            .expect('Content-type', /json/)
+            .expect(200)
+            .end(function (err, res) {
+                res.status.should.equal(200); // OK
+
+                var returnData = res.body.cart;
+                assert.equal(true, returnData.lineItems.length > 0);
+                assert.equal("cart", returnData.state);
+
+                server
+                    .get(apiURL + "/currentCart")  // query cart
+                    .expect('Content-type', /json/)
+                    .end(function (err, res) {
+                        res.status.should.equal(200);  // query OK because I can see my cart 
+
+                        // Check returned data
+                        assert.equal(true, returnData.lineItems.length > 0);
+                        assert.equal("cart", returnData.state);
+                        done();
+                    });
+
             });
+
+
     });
 
     //query method in /api/controllers/v1/CustomOrderController.js with keyword = Nguyen
-    it('Should let current user see their history order', function (done) {
+    it('Should let current user see all of their orders', function (done) {
         server
             .post(testConfig.apiLogin)
             .send(oldUsers[1])  // log in as admin
@@ -236,12 +260,13 @@ describe('Admin Order Controller Test', function () {
                 res.status.should.equal(200);
 
                 server
-                    .get(apiURL + "/current")  // query cart
+                    .get(apiURL + "/allOrders")  // query cart
                     .expect('Content-type', /json/)
                     .end(function (err, res) {
                         res.status.should.equal(200);  // query OK because I can see my cart 
-
+                      
                         // Check returned data
+                        assert.equal(true, res.body.orders.length > 0);
                         done();
                     });
             });
@@ -257,7 +282,7 @@ describe('Admin Order Controller Test', function () {
                 res.status.should.equal(200);
 
                 server
-                    .get(apiURL + "/current")  // query cart
+                    .get(apiURL + "/currentCart")  // query cart
                     .expect('Content-type', /json/)
                     .end(function (err, res) {
                         res.status.should.equal(200);  // query OK because I can see my cart 
@@ -278,7 +303,7 @@ describe('Admin Order Controller Test', function () {
                 res.status.should.equal(200);
 
                 server
-                    .get(apiURL + "/current")  // query cart
+                    .get(apiURL + "/currentCart")  // query cart
                     .expect('Content-type', /json/)
                     .end(function (err, res) {
                         res.status.should.equal(200);  // query OK because I can see my cart 

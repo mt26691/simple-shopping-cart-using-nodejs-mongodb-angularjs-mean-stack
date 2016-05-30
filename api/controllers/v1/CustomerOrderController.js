@@ -50,7 +50,6 @@ module.exports = {
             return res.status(200).json({ err: true, msg: "Id not found" });
         }
     },
-
     //create, update order
     'addToCart': function (req, res) {
         var postData = req.body;
@@ -82,22 +81,37 @@ module.exports = {
                 var expiresTime = 60 * 60 * 1000 * 14;
                 res.cookie("order", { orderId: order.id }, { expires: new Date(Date.now() + expiresTime), httpOnly: true });
             }
-            
+
             return res.status(200).json({ err: false, msg: "Current Cart", cart: order });
         });
     },
+    'migrateCart': function (req, res) {
+        if (req.user && req.cookies.order != null) {
+            var orderId = req.cookies.order.orderId;
+            orderService.migrateCart(req.user, orderId);
+            //migrate cart
+            var expiresTime = 60 * 60 * 1000 * 14;
+            res.cookie("order", { orderId: null }, { expires: new Date(Date.now() + expiresTime), httpOnly: true });
+        }
+
+    },
     'getCurrentCart': function (req, res, next) {
-        if (req.user) {
-            orderService.getCurrentCart(req.user, req.cookies.orderId, function (err, foundOrder) {
-                if (foundOrder) {
-                    req.currentCart = foundOrder;
-                }
-                next();
-            })
-        }
-        else {
-            next();
-        }
+        var orderId = req.cookies.order != null ? req.cookies.order.orderId : null;
+
+        orderService.getCurrentOrder(req.user, orderId, "cart", function (err, foundOrder) {
+            if (err) {
+                return res.status(500).json({ err: true, msg: "Server eror in getCurrentCart", error: err });
+            }
+
+            return res.status(200).json({ err: false, order: foundOrder });
+        });
+
+    },
+    'getAllOrders': function (req, res, next) {
+        var currentUser = req.user.id;
+        orderService.getAllOrders(currentUser, function (err, foundOrders) {
+            return res.status(200).json({ err: false, orders: foundOrders });
+        });
     },
     //delete order
     'delete': function (req, res) {

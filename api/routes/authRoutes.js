@@ -8,9 +8,10 @@
 var express = require('express');
 var router = express.Router();
 var authController = require("../controllers/v1/AuthController");
+var customerOrderController = require("../controllers/v1/CustomerOrderController");
 var checkIn = require("../policies/checkin");
 
-//login
+//login and then migrate cart
 router.post('/login/local', authController.login);
 
 //log out
