@@ -144,9 +144,9 @@ module.exports = {
 
         var orderId = null;
         if (req.cookies.order) {
-            orderId = req.cookies.orderId;
+            orderId = req.cookies.order.orderId;
         }
-
+       
         if (req.user || orderId) {
             orderService.checkout(req.user, orderId, shippingInfo, function (err, result, msg, order) {
                 if (err) {

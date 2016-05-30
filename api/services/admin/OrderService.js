@@ -10,6 +10,7 @@ var config = require("../../config/WebConfig");
 var helper = require("../HelperService");
 var productService = require("./productService");
 var _ = require("lodash");
+var uuid = require("node-uuid");
 
 var self = {
     //query orders
@@ -181,6 +182,7 @@ var self = {
         });
     },
     'checkout': function (currentUser, orderId, orderInfo, callback) {
+        
         self.getCurrentOrder(currentUser, orderId, "cart", function (err, foundOrder) {
             if (err) {
                 return callback(err);
@@ -188,11 +190,16 @@ var self = {
             if (!foundOrder) {
                 return callback(err, false, "Order not found");
             }
-
+            
             self.updateLineItems(foundOrder.lineItems, function (returnLineItems) {
                 foundOrder.orderInfo = orderInfo;
                 foundOrder.state = "checkout";
                 foundOrder.lineItems = returnLineItems;
+                if (!currentUser && orderId) {
+                    //create trackingCode for order if this is order is checked out by anonymous userId
+                    foundOrder.trackingCode = uuid.v4();
+                }
+                
                 foundOrder.save();
                 return callback(null, true, "order is checkout", foundOrder);
             });

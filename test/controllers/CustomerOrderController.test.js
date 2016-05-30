@@ -310,6 +310,8 @@ describe('Admin Order Controller Test', function () {
                         var order = res.body.order;
                         // Check returned data
                         assert.equal("checkout", order.state);
+                        //no tracking code for logged user
+                        assert.equal(true, order.trackingCode == null);
                         done();
                     });
             });
@@ -317,15 +319,46 @@ describe('Admin Order Controller Test', function () {
 
     // get in /api/controllers/v1/CustomOrderController.js
     it('should let anonymous user checkout', function (done) {
-        server
-            .post(apiURL + "/checkout")  // query cart
-            .expect('Content-type', /json/)
-            .end(function (err, res) {
-                res.status.should.equal(200);  // query OK because I can see my cart 
 
-                // Check returned data
-                done();
+        var products = {
+            product: newProducts[0].id,
+            quantity: 1
+        };
+
+        server
+            .post(apiURL + "/addToCart")
+            .send(products)  //send as anonymous
+            .expect('Content-type', /json/)
+            .expect(200)
+            .end(function (err, res) {
+                res.status.should.equal(200); // OK
+
+                var returnData = res.body.cart;
+                assert.equal(true, returnData.lineItems.length > 0);
+                assert.equal("cart", returnData.state);
+
+                var checkoutInfo = {
+                    street: "Check out street",
+                    city: "checkout city",
+                    receiver: "check out receiver"
+                };
+
+                server
+                    .post(apiURL + "/checkout")  //check out cart
+                    .send(checkoutInfo)
+                    .expect('Content-type', /json/)
+                    .end(function (err, res) {
+                        res.status.should.equal(200);
+                        var order = res.body.order;
+                        // Check returned data
+                        assert.equal("checkout", order.state);
+                        //anonymous checkout will create trackingCode on order
+                        assert.equal(true, order.trackingCode.length > 0);
+                        done();
+                    });
+
             });
+
     });
 
     after(function (done) {
