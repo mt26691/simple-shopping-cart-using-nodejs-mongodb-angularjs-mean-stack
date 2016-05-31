@@ -10,10 +10,16 @@ var router = express.Router();
 var homeController = require("../controllers/v1/HomeController");
 var checkIn = require("../policies/checkin");
 
-//blog home page, :page stand for the page user wish to see
-router.get("/", homeController.search);
 
-//get artcile details
-router.get("/:nameUrl/:id", homeController.get);
+router.get("/", homeController.queryProducts);
+router.get("/searchProducts", homeController.searchProducts);
+router.get("/:id", homeController.getProduct);
+
+// //blog home page, :page stand for the page user wish to see
+// router.get("/blogs", homeController.getBlog);
+
+
+// //get artcile details
+// router.get("/blog/:nameUrl/:id", homeController.getBlog);
 
 module.exports = router;

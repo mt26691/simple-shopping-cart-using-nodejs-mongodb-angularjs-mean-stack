@@ -103,38 +103,45 @@ module.exports = function (callback) {
                         //0
                         {
                             name: "product 01", slug: "product-01", shortDescription: "short", description: "des00",
-                            pricing: { retail: 100, sale: 0, stock: 80 }, primary_category: data.newCategories[0].id,
+                            pricing: { retail: 100, sale: 0, stock: 80 }, primaryCategory: data.newCategories[0].id,
                             createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id
                         },
                         //1
                         {
                             name: "product 02", slug: "product-02", shortDescription: "short", description: "des01",
-                            pricing: { retail: 100, sale: 90, stock: 80 }, primary_category: data.newCategories[0].id,
+                            pricing: { retail: 100, sale: 90, stock: 80 }, primaryCategory: data.newCategories[0].id,
                             createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id
                         },
                         //2
                         {
                             name: "product 03", slug: "product-03", shortDescription: "short", description: "des02",
-                            pricing: { retail: 100, sale: 80, stock: 80 }, primary_category: data.newCategories[0].id,
+                            pricing: { retail: 100, sale: 80, stock: 80 }, primaryCategory: data.newCategories[0].id,
                             createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id
                         },
                         //3
                         {
                             name: "product 04", slug: "product-04", shortDescription: "short", description: "des03",
-                            pricing: { retail: 100, sale: 90, stock: 80 }, primary_category: data.newCategories[0].id,
+                            pricing: { retail: 100, sale: 90, stock: 80 }, primaryCategory: data.newCategories[0].id,
                             createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id
                         },
                         //4
                         {
                             name: "product 05", slug: "product-05", shortDescription: "short", description: "des04",
-                            pricing: { retail: 100, sale: 90, stock: 80 }, primary_category: data.newCategories[0].id,
+                            pricing: { retail: 100, sale: 90, stock: 80 }, primaryCategory: data.newCategories[0].id,
                             createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id
                         },
                         //5
                         {
                             name: "product 06", slug: "product-06", shortDescription: "short", description: "des06",
-                            pricing: { retail: 100, sale: 90, stock: 80 }, primary_category: data.newCategories[1].id,
+                            pricing: { retail: 100, sale: 90, stock: 80 }, primaryCategory: data.newCategories[1].id,
                             createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id
+                        },
+                        //6
+                        {
+                            name: "product 07", slug: "product-07", shortDescription: "short", description: "des06",
+                            pricing: { retail: 100, sale: 90, stock: 80 }, primaryCategory: data.newCategories[1].id,
+                            createdBy: data.newUsers[1].id, updatedBy: data.newUsers[1].id,
+                            isActive: false,
                         },
                     ];
 
@@ -273,8 +280,8 @@ module.exports = function (callback) {
                                         pricing: data.newProducts[2].sale
                                     }
                                 ],
-                                trackingCode:"123456123456123456123456123456123456" 
-                               
+                                trackingCode: "123456123456123456123456123456123456"
+
                             },
                         ];
 

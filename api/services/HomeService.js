@@ -4,12 +4,13 @@
 */
 var model = require('../models/models')();
 var Article = model.Article;
+var Product = model.Product;
 var Comment = model.Comment;
 var config = require("../config/WebConfig");
 var User = model.User;
 module.exports = {
     //search articles
-    search: function(key, page, callback) {
+    search: function (key, page, callback) {
         var skip = 0;
         //items per page
         var itemsPerPage = config.itemsPerPage;
@@ -39,16 +40,105 @@ module.exports = {
             .sort({ createdAt: 'desc' })
             .skip(skip)
             .limit(itemsPerPage)
-            .exec(function(err, articles) {
+            .exec(function (err, articles) {
                 if (err) {
                     return callback(err);
                 }
                 //delete query option for couting
                 delete query.options;
                 //number of articles
-                query.count().exec(function(err, total) {
+                query.count().exec(function (err, total) {
                     callback(null, articles, total);
                 });
+            });
+    },
+    //query products
+    queryProducts: function (page, category, callback) {
+        var skip = 0;
+        //items per page
+        var itemsPerPage = config.itemsPerPage;
+
+        if (page != null && !isNaN(page)) {
+            skip = (page - 1) * itemsPerPage;
+        }
+
+        var query = Product.find({});
+        query.where('isActive').equals(true);
+        if (category != null && category != "") {
+            query.where('primaryCategory').equals(category);
+        }
+        query
+            //query everything except the field below
+            .select({ createdAt: 0, createdBy: 0, updatedBy: 0, description: 0, priceHistory: 0, updatedAt: 0, __v: 0, inActiveReason: 0 })
+            .populate('primaryCategory', 'name slug')
+            .sort({ createdAt: 'desc' })
+            .skip(skip)
+            .limit(itemsPerPage)
+            .exec(function (err, products) {
+                if (err) {
+                    return callback(err);
+                }
+                //delete query option for couting
+                delete query.options;
+                //number of articles
+                query.count().exec(function (err, total) {
+                    callback(null, products, total);
+                });
+            });
+    },
+    searchProducts: function (key, page, category, callback) {
+        var skip = 0;
+        //items per page
+        var itemsPerPage = config.itemsPerPage;
+
+        if (page != null && !isNaN(page)) {
+            skip = (page - 1) * itemsPerPage;
+        }
+
+        var realQueryData = {};
+        //find chapter which name contains queryData.keyword
+        if (key != null && key != '') {
+            realQueryData =
+                {
+                    $or: [
+                        { "name": { $regex: new RegExp('^.*' + key.toLowerCase() + ".*", 'i') } },
+                        { "slug": { $regex: new RegExp('^.*' + key.toLowerCase() + ".*", 'i') } },
+                        { "tag": { $regex: new RegExp('^.*' + key.toLowerCase() + ".*", 'i') } }
+                    ]
+                };;
+        }
+        var query = Product.find(realQueryData);
+        query.where('isActive').equals(true);
+        if (category != null && category != "") {
+            query.where('primaryCategory').equals(category);
+        }
+        query
+            //query everything except the field below
+            .select({ createdAt: 0, createdBy: 0, updatedBy: 0, description: 0, priceHistory: 0, updatedAt: 0, __v: 0, inActiveReason: 0 })
+            .populate('primaryCategory', 'name slug')
+            .sort({ createdAt: 'desc' })
+            .skip(skip)
+            .limit(itemsPerPage)
+            .exec(function (err, products) {
+                if (err) {
+                    return callback(err);
+                }
+                //delete query option for couting
+                delete query.options;
+                //number of articles
+                query.count().exec(function (err, total) {
+                    callback(null, products, total);
+                });
+            });
+    },
+    getProductById: function (id, callback) {
+        Product
+            .findOne({ _id: id, isActive: true })
+            .select({ createdAt: 0, createdBy: 0, updatedBy: 0, description: 0, priceHistory: 0, updatedAt: 0, __v: 0, inActiveReason: 0 })
+            .populate('primaryCategory', 'name slug')
+            .exec(function (err, foundProduct) {
+                console.log("i go here");
+                return callback(err, foundProduct);
             });
     },
     //get article based on id
@@ -56,7 +146,7 @@ module.exports = {
         Article
             .findOne({ _id: id, isActive: true })
             .populate('createdBy', 'name')
-            .exec(function(err, foundArticle) {
+            .exec(function (err, foundArticle) {
                 if (err) {
                     return callback(err);
                 }
@@ -65,7 +155,7 @@ module.exports = {
                         Comment.find({ article: foundArticle.id, isActive: true })
                             .select({ _v: 0, updatedAt: 0, updatedBy: 0 })
                             .populate("createdBy", "name")
-                            .exec(function(err, comments) {
+                            .exec(function (err, comments) {
                                 return callback(null, foundArticle, comments);
                             });
                     }
@@ -78,13 +168,13 @@ module.exports = {
     },
     //get recent added article
     //where top 5 newly added article excep current article
-    getRecentArticle: function(currentArticleID, callback) {
+    getRecentArticle: function (currentArticleID, callback) {
         Article
             .find({ '_id': { $ne: currentArticleID } })
             .select({ id: 1, name: 1, nameUrl: 1 })
             .sort({ createdAt: 'desc' })
             .skip(5)
-            .exec(function(err, articles) {
+            .exec(function (err, articles) {
                 if (err) {
                     return callback(err);
                 }

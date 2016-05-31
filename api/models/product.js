@@ -73,7 +73,7 @@ var productSchema = new mongoose.Schema({
     },
 
     //category
-    primary_category: { type: Schema.Types.ObjectId, ref: 'Category' },
+    primaryCategory: { type: Schema.Types.ObjectId, ref: 'Category' },
     category_ids: [{ type: Schema.Types.ObjectId, ref: 'Category' }],
     main_cat_id: { type: Schema.Types.ObjectId, ref: 'Category' },
 

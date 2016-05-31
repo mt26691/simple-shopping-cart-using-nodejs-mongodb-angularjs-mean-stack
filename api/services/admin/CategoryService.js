@@ -117,7 +117,7 @@ var self = {
 
             //check for product
             Product
-                .findOne({ primary_category: id })
+                .findOne({ primaryCategory: id })
                 .select({ id: 1 })
                 .exec(function (err, product) {
                     

@@ -46,7 +46,7 @@ var self = {
         //query everything except the field updatedBy and __v
         query.select({ updatedBy: 0, __v: 0 })
             .populate('createdBy', 'name')
-            .populate('primary_category', 'name slug')
+            .populate('primaryCategory', 'name slug')
             .sort({ updatedAt: 'desc' })
             .skip(skip)
             .limit(itemsPerPage)
@@ -70,7 +70,7 @@ var self = {
             .findOne({ _id: id })
             //not select createdAt, updatedAt and __v fields
             .select({ createdAt: 0, updatedAt: 0, __v: 0 })
-            .populate('primary_category', 'name slug')
+            .populate('primaryCategory', 'name slug')
             .exec(function (err, foundProduct) {
                 if (err) {
                     return callback(err);
