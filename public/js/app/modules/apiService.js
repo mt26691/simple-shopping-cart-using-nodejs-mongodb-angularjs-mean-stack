@@ -8,6 +8,10 @@ apiServices.factory("DashBoard", ["$resource", function($resource) {
     return $resource("/api/v1/admin/dashboard/", {}, {});
 }]);
 
+apiServices.factory("Category", ["$resource", function($resource) {
+    return $resource("/api/v1/admin/category/:id", {}, {});
+}]);
+
 apiServices.factory("Article", ["$resource", function($resource) {
     return $resource("/api/v1/admin/article/:id", {}, {});
 }]);

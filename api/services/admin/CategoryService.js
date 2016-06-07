@@ -27,7 +27,7 @@ var self = {
             //find category which name contains queryData.keyword
             realQueryData = {
                 $or: [
-                    //fint with case insentivie
+                    //find with case insentivie
                     { "name": { $regex: new RegExp('^.*' + queryData.keyword.toLowerCase() + ".*", 'i') } },
                     { "slug": { $regex: new RegExp('^.*' + queryData.keyword.toLowerCase() + ".*", 'i') } },
                     { "description": { $regex: new RegExp('^.*' + queryData.keyword.toLowerCase() + ".*", 'i') } }
@@ -59,7 +59,6 @@ var self = {
             });
     },
 
-
     //get category base on id
     'get': function (id, callback) {
         Category
@@ -68,6 +67,8 @@ var self = {
             .select({ createdAt: 0, updatedAt: 0, __v: 0 })
             .populate('parent', 'name slug')
             .populate('ancestors', 'name slug')
+            .populate('createdBy','name')
+            .populate('updatedBy','name')
             .exec(function (err, foundCategory) {
                 if (err) {
                     return callback(err);

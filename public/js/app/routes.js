@@ -1,5 +1,5 @@
 //ROUTES
-SimpleBlogApp.config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
+SimpleBlogApp.config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
     window.routes = {
         '/':
         {
@@ -21,19 +21,25 @@ SimpleBlogApp.config(['$routeProvider', '$locationProvider', function($routeProv
         },
         '/admin/user':
         {
-            templateUrl: '/templates/admin/user/users.html',
+            templateUrl: '/templates/admin/users.html',
             controller: 'userController',
+            role: 'admin'
+        },
+        '/admin/category':
+        {
+            templateUrl: '/templates/admin/category.html',
+            controller: 'categoryController',
             role: 'admin'
         },
         '/admin/article':
         {
-            templateUrl: '/templates/admin/article/article.html',
+            templateUrl: '/templates/admin/article.html',
             controller: 'articleController',
             role: 'admin'
         },
         '/admin/comment':
         {
-            templateUrl: '/templates/admin/comment/comment.html',
+            templateUrl: '/templates/admin/comment.html',
             controller: 'commentController',
             role: 'admin'
         },

@@ -23,6 +23,13 @@ SimpleBlogApp.controller('masterController', ['$scope', '$location', '$rootScope
                 accessRight: 9
             },
             {
+                name: 'Category',
+                url: '/admin/category',
+                title: 'Category',
+                iconClass: 'fa fa-users fa-fw',
+                accessRight: 9
+            },
+            {
                 name: 'User',
                 url: '/admin/user',
                 title: 'User Management.',

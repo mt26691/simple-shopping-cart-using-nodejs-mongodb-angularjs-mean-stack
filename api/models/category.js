@@ -8,7 +8,7 @@ var categorySchema = new mongoose.Schema({
         type: String,
         required: true,
         minlength: 2,
-        maxlength: 256
+        maxlength: 64
     },
     //slug url of product, we use it for user friendly url
     //if product name is "this is a test product" 
@@ -17,7 +17,7 @@ var categorySchema = new mongoose.Schema({
         type: String,
         required: true,
         minlength: 2,
-        maxlength: 256
+        maxlength: 64
     },
     //article description
     description: {

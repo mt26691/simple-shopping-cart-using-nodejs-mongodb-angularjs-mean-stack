@@ -1,0 +1,108 @@
+<div class="row">
+    <div class="col-md-6">
+        <h3 class=" pull-left">Category Management.</h3>
+    </div>
+</div>
+<!--search form-->
+<div class="row">
+    <div class="col-md-7">
+        <form name="searchForm" class="form-horizontal" novalidate ng-submit="query();">
+            <div class="form-group">
+                <input class="text-box single-line" placeholder="keyword" name="keyword" ng-model="search.keyword" ng-minlength="1" ng-maxlength="255"
+                />
+                <input type="submit" value="Search" class="btn btn-md btn-default" />
+            </div>
+        </form>
+    </div>
+    <div class="col-md-5 text-right"><a class="btn btn-md btn-primary" ng-click="addNew(form)">New Category</a></div>
+</div>
+
+<div class="row">
+    <table class="table table-bordered table-hover tableAdmin">
+        <tr>
+            <th>Tên</th>
+            <th>Tên url</th>
+            <th>Cha</th>
+            <th>Ngày tạo</th>
+            <th>Ngày cập nhật</th>
+            <th></th>
+        </tr>
+        <tr data-id="{{category.id}}" ng-repeat="category in listItem" ng-class="{ 'active' : category.id == newEditForm.id}">
+            <td width="15%">{{category.name}}</td>
+            <td width="15%">{{category.slug}}</td>
+            <td width="15%">{{category.parent.name}}</td>
+            <td width="15%">{{category.createdAt | date:"dd/MM/yyyy h:mma"}}</td>
+            <td width="15%">{{category.updatedAt | date:"dd/MM/yyyy h:mma"}}</td>
+            <td width="15%" class="text-center">
+                <a ng-click="edit(category.id,form)" class="btn btn-sm btn-warning">Sửa</a>
+                <a ng-click="delete(category.id)" confirm="Bạn muốn xóa mục này {{category.name}}?" class="btn btn-sm btn-danger">Xóa</a>
+            </td>
+        </tr>
+    </table>
+    <uib-pagination total-items="totalItems" ng-model="currentPage" max-size="$root.maxPagingSize" class="pagination-sm" boundary-links="true"
+        rotate="false" num-pages="numPages" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"
+        items-per-page="$root.itemsPerPage" ng-change="query();"></uib-pagination>
+</div>
+
+<!--edit form-->
+
+<div class="row" ng-hide="newEditForm === null">
+    <div class="col-md-10 col-md-offset-1">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    <span>{{newEditForm.id  ? 'Edit Category' : 'New Category'}}</span>
+                </h3>
+            </div>
+            <div class="panel-body">
+
+                <form name="form" method="post" novalidate ng-submit="submitForm(form.$valid)">
+                    <fieldset>
+                        <div class="form-group" ng-class="{ 'has-error' : form.name.$invalid && !form.name.$pristine && form.$submitted }">
+                            <label>Tên</label>
+                            <input type="text" class="form-control" placeholder="Name" name="name" ng-model="newEditForm.name" ng-minlength="4" ng-maxlength="40"
+                                required />
+                            <div ng-messages="form.name.$error" ng-if="form.$submitted" class="error-message">
+                                <span ng-message="minlength">Tên tối thiểu 2 kí tự.</span>
+                                <span ng-message="maxlength">Tên tối đa 64 kí tự.</span>
+                                <span ng-message="required">Bạn chưa nhập tên.</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group" ng-class="{ 'has-error' : form.parent.$invalid && !form.parent.$pristine && form.$submitted }">
+                            <label>Cha</label>
+                            
+                            <select class="form-control" name="parent" ng-model="newEditForm.parent">
+                                <option value="">Chọn</option>
+                                <option value="normal">Normal</option>
+                                <option value="editor">Editor</option>
+                                <option value="admin">Admin</option>
+                            </select>
+                            
+                        </div>
+                        <div class="form-group">
+                            <label>Người tạo</label>
+                            <span>{{newEditForm.createdBy.name}}</span>
+                        </div>
+                        <div class="form-group">
+                            <label>Người chỉnh sửa</label>
+                            <span>{{newEditForm.updatedBy.name}}</span>
+                        </div>
+                        <div class="form-group error-message" ng-if="err">
+                            {{msg}}
+                        </div>
+
+                        <input type="hidden" class="form-control" name="id" ng-model="newEditForm.id" />
+
+                        <div class="form-group">
+                            <input type="submit" value="Gởi" class="btn btn-primary" />
+                            <!--<input type="reset" class="btn btn-warning" />-->
+                            <input type="button" value="Đóng" class="btn btn-danger" ng-click="cancelEdit()" />
+                        </div>
+
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
