@@ -22,7 +22,7 @@ gulp.task('watch', function () {
     gulp.watch(
         ['bin/www', './**/*.js'],
         ['mocha']
-        );
+    );
 });
 
 gulp.task('mocha', function () {
@@ -37,26 +37,36 @@ gulp.task('mocha', function () {
             bail: false
         }).on('error', function () { })
         //do nothing
-            );
+        );
 });
 
 gulp.task('inject', function () {
     var sources = gulp.src(pipeLine.injectFile, { read: false });
     // Read templates 
-    gulp.src('./views/layout*.html')
-    // Link the JavaScript and css
+    gulp.src('./views/layout.html')
+        // Link the JavaScript and css
         .pipe(inject(sources, { ignorePath: 'public' }))
-    // Write modified files to views 
+        // Write modified files to views 
         .pipe(gulp.dest('./views'));
 });
 
-gulp.task("production", function () {
+gulp.task('inject_admin', function () {
+    var sources = gulp.src(pipeLine.injectFileAdmin, { read: false });
+    // Read templates 
+    gulp.src('./views/layout_admin.html')
+        // Link the JavaScript and css
+        .pipe(inject(sources, { ignorePath: 'public' }))
+        // Write modified files to views 
+        .pipe(gulp.dest('./views'));
+});
+
+gulp.task("production_site", function () {
     //min css
     gulp.src(require('./tasks/pipeline').cssFilesToInject)
         .pipe(concat('production.min.css'))
         .pipe(cssnano())
         .pipe(gulp.dest('./public/dist'));
-    //min js
+    // min js
     gulp.src(require('./tasks/pipeline').jsFilesToInject)
         .pipe(concat('production.min.js'))
         .pipe(uglify())
@@ -64,11 +74,33 @@ gulp.task("production", function () {
     //inject
     var sources = gulp.src(["./public/dist/production.min.js", "./public/dist/production.min.css"], { read: false });
     // Read templates 
-    gulp.src('./views/layout*.html')
-    // Link the JavaScript and css
+    gulp.src('./views/layout.html')
+        // Link the JavaScript and css
         .pipe(inject(sources, { ignorePath: 'public' }))
-    // Write modified files to views 
+        // Write modified files to views 
         .pipe(gulp.dest('./views'));
 });
 
+gulp.task("production_admin", function () {
+    //min css
+    gulp.src(require('./tasks/pipeline').cssFilesToInjectAdmin)
+        .pipe(concat('production_admin.min.css'))
+        .pipe(cssnano())
+        .pipe(gulp.dest('./public/dist'));
+    //min js
+    gulp.src(require('./tasks/pipeline').jsFilesToInject)
+        .pipe(concat('production_admin.min.js'))
+        .pipe(uglify())
+        .pipe(gulp.dest('./public/dist'));
+    //inject
+    var sources = gulp.src(["./public/dist/production_admin.min.js", "./public/dist/production_admin.min.css"], { read: false });
+    // Read templates 
+    gulp.src('./views/layout_admin.html')
+        // Link the JavaScript and css
+        .pipe(inject(sources, { ignorePath: 'public' }))
+        // Write modified files to views 
+        .pipe(gulp.dest('./views'));
+});
 gulp.task('default', ['inject', 'nodemon']);
+
+gulp.task('production', ['production_site', 'production_admin'])
