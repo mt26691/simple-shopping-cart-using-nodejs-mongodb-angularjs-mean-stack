@@ -101,6 +101,7 @@ gulp.task("production_admin", function () {
         // Write modified files to views 
         .pipe(gulp.dest('./views'));
 });
-gulp.task('default', ['inject', 'nodemon']);
+
+gulp.task('default', ['inject', 'inject_admin', 'nodemon']);
 
 gulp.task('production', ['production_site', 'production_admin'])
