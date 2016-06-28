@@ -44,7 +44,8 @@ describe('Home Controller Test', function () {
                 res.status.should.equal(200); // OK
                 //check returned data
                 assert.equal(5, res.body.products.length);
-                assert.equal(oldProducts.length, res.body.total);
+                //one inactive product
+                assert.equal(oldProducts.length - 1, res.body.total);
                 done();
             });
 
@@ -58,8 +59,8 @@ describe('Home Controller Test', function () {
             .expect(200)
             .end(function (err, res) {
                 res.status.should.equal(200); // OK
-                assert.equal(oldProducts.length - 5, res.body.products.length);
-                assert.equal(oldProducts.length, res.body.total);
+                assert.equal(1, res.body.products.length);
+                assert.equal(6, res.body.total);
                 done();
             });
     });
@@ -86,7 +87,8 @@ describe('Home Controller Test', function () {
             .end(function (err, res) {
                 res.status.should.equal(200); // OK
                 assert.equal(1, res.body.products.length);
-                assert.equal(newProducts.length, res.body.total);
+                //one inactive product
+                assert.equal(newProducts.length - 1, res.body.total);
                 done();
             });
     });
@@ -100,7 +102,8 @@ describe('Home Controller Test', function () {
             .end(function (err, res) {
                 res.status.should.equal(200); // OK
                 assert.equal(5, res.body.products.length);
-                assert.equal(newProducts.length, res.body.total);
+                //one inactive product
+                assert.equal(newProducts.length - 1, res.body.total);
                 done();
             });
     });

@@ -1,22 +1,22 @@
 var apiServices = angular.module("api-services", []);
 
-apiServices.factory("User", ["$resource", function($resource) {
+apiServices.factory("User", ["$resource", function ($resource) {
     return $resource("/api/v1/admin/user/:id", {}, {});
 }]);
 
-apiServices.factory("DashBoard", ["$resource", function($resource) {
+apiServices.factory("DashBoard", ["$resource", function ($resource) {
     return $resource("/api/v1/admin/dashboard/", {}, {});
 }]);
 
-apiServices.factory("Category", ["$resource", function($resource) {
+apiServices.factory("Category", ["$resource", function ($resource) {
     return $resource("/api/v1/admin/category/:id", {}, {});
 }]);
 
-apiServices.factory("Article", ["$resource", function($resource) {
+apiServices.factory("Article", ["$resource", function ($resource) {
     return $resource("/api/v1/admin/article/:id", {}, {});
 }]);
 
-apiServices.factory("Chapter", ["$resource", function($resource) {
+apiServices.factory("Chapter", ["$resource", function ($resource) {
     return $resource("/api/v1/admin/chapter/:id", {}, {
         "getCurrentOrder": {
             url: "/api/v1/admin/chapter/getCurrentOrder/:subject",
@@ -29,20 +29,20 @@ apiServices.factory("Chapter", ["$resource", function($resource) {
     });
 }]);
 
-apiServices.factory("Comment", ["$resource", function($resource) {
+apiServices.factory("Comment", ["$resource", function ($resource) {
     return $resource("/api/v1/admin/comment/:id", {}, {});
 }]);
 
 
-apiServices.factory("MailHandler", ["$resource", function($resource) {
+apiServices.factory("MailHandler", ["$resource", function ($resource) {
     return $resource("/api/v1/admin/sendEmail/", {}, {});
 }]);
 
-apiServices.factory("UploadImage", ["$resource", function($resource) {
+apiServices.factory("UploadImage", ["$resource", function ($resource) {
     return $resource("/uploadImage", {}, {});
 }]);
 
-apiServices.factory("AuthApi", ["$resource", function($resource) {
+apiServices.factory("AuthApi", ["$resource", function ($resource) {
     return $resource("/api/v1/auth", {}, {
         "loginLocal": {
             url: "/api/v1/auth/login/local",
@@ -52,7 +52,7 @@ apiServices.factory("AuthApi", ["$resource", function($resource) {
 }]);
 
 //Account
-apiServices.factory("Account", ["$resource", function($resource) {
+apiServices.factory("Account", ["$resource", function ($resource) {
     return $resource("/api/v1/account/:action", {}, {
         "register": {
             method: "POST",
@@ -100,8 +100,12 @@ apiServices.factory("Account", ["$resource", function($resource) {
     });
 }]);
 
-apiServices.factory("HomeApi", ["$resource", function($resource) {
+apiServices.factory("HomeApi", ["$resource", function ($resource) {
     return $resource("/api/v1/home/", {}, {
+        "queryProducts": {
+            url: "/api/v1/home/",
+            method: "GET"
+        },
         "search": {
             url: "/api/v1/home/search",
             method: "GET"
