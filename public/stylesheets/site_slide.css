@@ -32,10 +32,6 @@ body {
     -o-background-size: cover;
 }
 
-footer {
-    margin: 50px 0;
-}
-
 .icon-prev,.icon-next
 {
     cursor: pointer;

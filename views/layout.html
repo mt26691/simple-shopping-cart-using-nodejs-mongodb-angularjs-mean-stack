@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="/stylesheets/style.css">
     <link rel="stylesheet" href="/stylesheets/angular-toastr.css">
     <link rel="stylesheet" href="/stylesheets/font-awesome.min.css">
+    <link rel="stylesheet" href="/stylesheets/site_footer.css">
     <link rel="stylesheet" href="/stylesheets/site_header.css">
     <link rel="stylesheet" href="/stylesheets/site_slide.css">
     <!-- endinject -->
@@ -72,7 +73,7 @@
         </div>
     </header>
     <!-- Full Page Image Background Carousel Header -->
-    <section id="myCarousel" class="carousel slide">
+    <div id="myCarousel" class="carousel slide">
         <!-- Indicators -->
         <ol class="carousel-indicators">
             <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
@@ -83,65 +84,79 @@
         <div class="carousel-inner">
             <div class="item active">
                 <!-- Set the first background image using inline CSS below. -->
-                <div class="fill" style="background-image:url('/images/slide/test_slide_1.jpg');"></div>
+                <div class="fill" style="background-image:url('/images/slide/test_slide_2.jpg');"></div>
                 <div class="carousel-caption">
                     <h2>Vườn tự tưới</h2>
                 </div>
             </div>
             <div class="item">
                 <!-- Set the second background image using inline CSS below. -->
-                <div class="fill" style="background-image:url('/images/slide/test_slide_2.jpg');"></div>
+                <div class="fill" style="background-image:url('/images/slide/test_slide_1.jpg');"></div>
                 <div class="carousel-caption">
                     <h2>Vườn thông minh</h2>
                 </div>
             </div>
         </div>
-
-        <!-- Controls -->
-        <a class="left carousel-control" href="#myCarousel" data-slide="prev">
+        <!--<a class="left carousel-control" href="#myCarousel" data-slide="prev">
             <span class="icon-prev"></span>
         </a>
         <a class="right carousel-control" href="#myCarousel" data-slide="next">
             <span class="icon-next"></span>
-        </a>
+        </a>-->
+    </div>
 
-    </section>
-    
     <!-- Portfolio Grid Section -->
     <section class="container" id="mainContainer">
         <div ng-view></div>
     </section>
 
     <footer class="text-center">
-        <div class="footer-above">
+        <div class="footer-top">
             <div class="container">
                 <div class="row">
-                    <div class="footer-col col-md-3">
-                        <h3>Contact us</h3>
-                        <p><a href="mailto:nguyenmanhtung848@gmail.com">nguyenmanhtung848@gmail.com</a></p>
+                    <div class="col-md-3 col-md-offset-2">
+                        <div class="widget widget_menu">
+                            <h3 class="widget-title">Thông tin</h3>
+                            <!-- /.widget-title -->
+                            <div class="widget-details">
+                                <nav>
+                                    <ul>
+                                        <li><a href="#">Sản phẩm</a></li>
+                                        <li><a href="#">Về chúng tôi</a></li>
+                                        <li><a href="#">Liên hệ</a></li>
+                                        <li><a href="#">Chính sách</a></li>
+                                        <li><a href="#">Bảo hành</a></li>
+                                    </ul>
+                                </nav>
+                            </div>
+                            <!-- /.widget-details -->
+                        </div>
+                        <!-- /.widget -->
                     </div>
-                    <div class="footer-col col-md-3">
-                        <h3>Information</h3>
-                        <p><a href="/about-us">About us.</a></p>
-                        <p><a href="/policies">Policies.</a></p>
-                    </div>
-                    <div class="footer-col col-md-3">
-                        <h3>Facebook</h3>
-                        <ul class="list-inline">
-                            <li>
-                                <a href="https://www.facebook.com/mt26691" class="btn-social-footer btn-outline"><i class="fa fa-fw fa-facebook"></i></a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="footer-col col-md-3">
-                        <h3>My Blog</h3>
-                        <p>This is a simple blog based on nodejs angularjs and mongodb.</p>
+
+                    <div class="col-md-6">
+                        <div class="widget widget_menu">
+                            <h3 class="widget-title">Liên hệ</h3>
+                            <!-- /.widget-title -->
+                            <div class="widget-details">
+                                <nav>
+                                    <ul>
+                                        <li><a href="#">Nguyễn Mạnh Tùng: 0985.519.599</a></li>
+                                        <li><a href="#">Email: nguyemmanhtung848@gmail.com</a></li>
+                                        <li><a href="#">Địa chỉ: 43 Phùng Khắc Khoan, Sơn Trà, Đà Nẵng</a></li>
+                                        <li><a href="#">Facebook</a></li>
+                                    </ul>
+                                </nav>
+                            </div>
+                            <!-- /.widget-details -->
+                        </div>
+                        <!-- /.widget -->
                     </div>
                 </div>
             </div>
         </div>
         <div class="footer-below" id="footer-below">
-            Copyright © hocdai.com 2016
+            Copyright © MT Group 2016
         </div>
     </footer>
 
