@@ -30,7 +30,7 @@ var cssFilesToInjectAdmin = [
 var jsFilesToInject = [
     //bootstrap
     'js/bootstrap.min.js',
-
+    'js/lib/*.js',
     //angular 1.4.8 stable version
     'js/angular/angular.min.js',
     'js/angular/angular-route.min.js',
