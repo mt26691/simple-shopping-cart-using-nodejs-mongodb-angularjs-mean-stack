@@ -36,8 +36,8 @@ var jsFilesToInject = [
     'js/angular/*.js',
     //our app
     'js/app/angularApp.js',
-    'js/app/**/*.js'
-
+    'js/app/**/*.js',
+    'js/*.js'
     // 'js/**/*.js',
 ];
 
