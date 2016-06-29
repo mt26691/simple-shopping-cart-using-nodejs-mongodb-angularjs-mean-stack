@@ -1,0 +1,33 @@
+{
+  "name": "angularLib",
+  "authors": [
+    "Bim"
+  ],
+  "description": "angular libs",
+  "main": "bim",
+  "moduleType": [
+    "node"
+  ],
+  "keywords": [
+    "angular lib"
+  ],
+  "license": "MIT",
+  "homepage": "hocdai.com",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "^1.5.7",
+    "angular-cookies": "^1.5.7",
+    "angular-messages": "^1.5.7",
+	"angular-resource": "^1.5.7",
+	"angular-route": "^1.5.7",
+	"angular-sanitize": "^1.5.7"
+	
+  }
+}

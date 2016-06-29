@@ -31,29 +31,14 @@ var jsFilesToInject = [
     //bootstrap
     'js/bootstrap.min.js',
     'js/lib/*.js',
-    //angular 1.4.8 stable version
-    'js/angular/angular.min.js',
-    'js/angular/angular-route.min.js',
-    'js/angular/angular-resource.min.js',
-    //angular bootstrap 0.14.3
-    'js/angular/ui-bootstrap-tpls-0.14.3.min.js',
+    'js/bower_components/**/*.min.js',
+    //external angular lib
     'js/angular/*.js',
+    //our app
     'js/app/angularApp.js',
-    // Dependencies like jQuery, or Angular are brought in here
+    'js/app/**/*.js'
 
-    // All of the rest of your client-side js files
-    // will be injected here in no particular order.
-    'js/app/modules/*.js',
-    'js/app/*.js',
-
-    'js/app/factory/*.js',
-    'js/app/home/*.js',
-    'js/app/authenticate/*.js',
-    'js/**/*.js',
-    //  'js/app/directives/*.js'
-    // Use the "exclude" operator to ignore files
-    // '!js/ignore/these/files/*.js'
-
+    // 'js/**/*.js',
 ];
 
 // Prefix relative paths to source files so they point to the proper locations
